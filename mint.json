@@ -11,10 +11,6 @@
     "light": "#8650EC",
     "dark": "#5F23CF"
   },
-  "topbarCtaButton": {
-    "name": "",
-    "url": ""
-  },
   "topbarLinks": [
     {
       "name": "Blog",
@@ -25,21 +21,47 @@
       "url": "https://github.com/Nixtla"
     }
   ],
+  "topAnchor": {
+      "name": "StatsForecast",
+      "icon": "bolt"
+  },
   "anchors": [
     {
-      "name": "statsforecast",
-      "icon": "chart-scatter",
-      "url": "statsforecast"
+      "name": "NeuralForecast",
+      "url": "neuralforecast",
+      "icon": "brain-circuit"
     }
   ],
   "navigation": [
     {
       "group": "",
-      "pages": [""]
+      "pages": ["statsforecast/introduction"]
+    },
+    {
+      "group": "Getting Started",
+      "pages": [
+        "statsforecast/getting-started/install",
+        "statsforecast/getting-started/quickstart",
+        "statsforecast/getting-started/end-to-end-walkthrough"
+      ]
+    },
+    {
+      "group": "Tutorials", 
+      "pages": [
+        "statsforecast/tutorials/getting-started-with-auto-arima-and-ets",
+        "statsforecast/tutorials/anomaly-detection",
+        {
+          "group": "Forecast at scale", 
+          "pages": [
+            "statsforecast/tutorials/dask",
+            "statsforecast/tutorials/ray",
+            "statsforecast/tutorials/spark"
+          ]
+        },
+        "statsforecast/tutorials/crossvalidation"
+      ]
     }
   ],
   "footerSocials": {
-    "twitter": "",
-    "linkedin": ""
   }
 }

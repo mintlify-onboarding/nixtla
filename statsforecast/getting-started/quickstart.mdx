@@ -30,11 +30,11 @@ First, we’ll import the data:
 
 > UsageError: unrecognized arguments: hide output
 
-```
+```python
 import pandas as pd
 ```
 
-```
+```python
 df = pd.read_csv('https://datasets-nixtla.s3.amazonaws.com/air-passengers.csv')
 df.head()
 ```
@@ -49,8 +49,8 @@ df.head()
 
 We fit the model by instantiating a new StatsForecast object with its two required parameters:
 
-- `models`: a list of models. Select the models you want from models and import them. For this example, we will use a AutoARIMA model. We set season_length to 12 because we expect seasonal effects every 12 months. (See: Seasonal periods)
-- `freq`: a string indicating the frequency of the data. (See panda’s available frequencies.)
+- `models`: a list of models. Select the [models](/statsforecast/api-reference/models) you want from models and import them. For this example, we will use a [`AutoARIMA`](/statsforecast/api-reference/models#autoarima) model. We set `season_length` to 12 because we expect seasonal effects every 12 months. (See: [Seasonal periods](https://robjhyndman.com/hyndsight/seasonal-periods/))
+- `freq`: a string indicating the frequency of the data. (See [panda’s available frequencies](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#offset-aliases).)
 
 Any settings are passed into the constructor. Then you call its fit method and pass in the historical data frame.
 
@@ -61,7 +61,7 @@ Any settings are passed into the constructor. Then you call its fit method and p
   should take less than 0.2s.
 </Info>
 
-```java
+```python
 from statsforecast import StatsForecast
 from statsforecast.models import AutoARIMA
 
@@ -80,7 +80,7 @@ The `predict` method takes two arguments: forecasts the next h (for horizon) and
 
 The forecast object here is a new data frame that includes a column with the name of the model and the y hat values, as well as columns for the uncertainty intervals.
 
-```java
+```python
 forecast_df = sf.predict(h=12, level=[90])
 
 forecast_df.tail()
@@ -96,13 +96,15 @@ forecast_df.tail()
 
 You can plot the forecast by calling the `StatsForecast.plot` method and passing in your forecast dataframe.
 
-```java
+```python
 df["ds"]=pd.to_datetime(df["ds"])
 sf.plot(df, forecast_df, level=[90])
 ```
 
 <Tip>
-  - Build and end to end forecasting pipeline following best practices in End to
-  End Walkthrough - Forecast millions of series in a scalable cluster in the
-  cloud using Spark and Nixtla - Detect anomalies in your past observations
+  - Build and end to end forecasting pipeline following best practices in [End to End Walkthrough](/statsforecast/getting-started/end-to-end-walkthrough) 
+  - Forecast millions of series in a scalable cluster in the cloud using Spark and Nixtla - Detect anomalies in your past observations
+  - [Detect anomalies](/statsforecast/tutorials/anomaly-detection) in your past observations
 </Tip>
+
+Give us a ⭐ on [Github](https://github.com/nixtla/statsforecast)
