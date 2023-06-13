@@ -22,8 +22,8 @@
     }
   ],
   "topAnchor": {
-      "name": "StatsForecast",
-      "icon": "bolt"
+    "name": "StatsForecast",
+    "icon": "bolt"
   },
   "anchors": [
     {
@@ -46,12 +46,14 @@
       ]
     },
     {
-      "group": "Tutorials", 
+      "group": "Tutorials",
       "pages": [
         "statsforecast/tutorials/getting-started-with-auto-arima-and-ets",
         "statsforecast/tutorials/anomaly-detection",
+        "statsforecast/tutorials/electricity-load-forecasting",
+        "statsforecast/tutorials/detect-demand-peaks",
         {
-          "group": "Forecast at scale", 
+          "group": "Forecast at scale",
           "pages": [
             "statsforecast/tutorials/dask",
             "statsforecast/tutorials/ray",
@@ -62,6 +64,5 @@
       ]
     }
   ],
-  "footerSocials": {
-  }
+  "footerSocials": {}
 }

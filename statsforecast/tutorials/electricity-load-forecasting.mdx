@@ -1,0 +1,52 @@
+---
+title: "Electricity Load Forecast"
+description: "In this example we will show how to perform electricity load forecasting considering a model capable of handling multiple seasonalities (MSTL)."
+---
+
+[![Deploy to Render](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Nixtla/statsforecast/blob/main/nbs/examples/ElectricityLoadForecasting.ipynb)
+
+## Introduction
+
+Some time series are generated from very low frequency data. These data generally exhibit multiple seasonalities. For example, hourly data may exhibit repeated patterns every hour (every 24 observations) or every day (every 24 \* 7, hours per day, observations). This is the case for electricity load. Electricity load may vary hourly, e.g., during the evenings electricity consumption may be expected to increase. But also, the electricity load varies by week. Perhaps on weekends there is an increase in electrical activity.
+
+In this example we will show how to model the two seasonalities of the time series to generate accurate forecasts in a short time. We will use hourly PJM electricity load data. The original data can be found [here](https://github.com/jnagura/Energy-consumption-prediction-analysis).
+
+## Libraries
+
+In this example we will use the following libraries: - [`StatsForecast`](https://Nixtla.github.io/statsforecast/src/core/core.html#statsforecast). Lightning ⚡️ fast forecasting with statistical and econometric models. Includes the MSTL model for multiple seasonalities. - `DatasetsForecast`. Used to evaluate the performance of the forecasts. - `Prophet`. Benchmark model developed by Facebook. - `NeuralProphet`. Deep Learning version of Prophet. Used as benchark.
+
+```sql
+!pip install statsforecast
+!pip install datasetsforecast
+!pip install prophet
+!pip install "neuralprophet[live]"
+```
+
+## Forecast using Multiple Seasonalities
+
+### Electricity Load Data
+
+According to the [dataset’s page](https://www.kaggle.com/datasets/robikscube/hourly-energy-consumption),
+
+> PJM Interconnection LLC (PJM) is a regional transmission organization (RTO) in the United States. It is part of the Eastern Interconnection grid operating an electric transmission system serving all or parts of Delaware, Illinois, Indiana, Kentucky, Maryland, Michigan, New Jersey, North Carolina, Ohio, Pennsylvania, Tennessee, Virginia, West Virginia, and the District of Columbia. The hourly power consumption data comes from PJM’s website and are in megawatts (MW).
+
+Let’s take a look to the data.
+
+```sql
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+pd.plotting.register_matplotlib_converters()
+plt.rc("figure", figsize=(10, 8))
+plt.rc("font", size=10)
+```
+
+```sql
+df = pd.read_csv('https://raw.githubusercontent.com/jnagura/Energy-consumption-prediction-analysis/master/PJM_Load_hourly.csv')
+df.columns = ['ds', 'y']
+df.insert(0, 'unique_id', 'PJM_Load_hourly')
+df['ds'] = pd.to_datetime(df['ds'])
+df = df.sort_values(['unique_id', 'ds']).reset_index(drop=True)
+df.tail()
+```
