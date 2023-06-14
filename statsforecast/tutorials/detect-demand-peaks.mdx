@@ -48,7 +48,7 @@ import numpy as np
 import pandas as pd
 ```
 
-```cs
+```python 
 # Load data
 historic = pd.read_csv('./Native_Load_2022.csv')
 # Add missing hour due to daylight saving time
@@ -72,7 +72,7 @@ Plot the series using the `plot` method from the `StatsForecast` class. This met
   change to MatPlotLib by setting `engine="matplotlib"`.
 </Info>
 
-```java
+```python 
 from statsforecast import StatsForecast
 
 StatsForecast.plot(Y_df)
@@ -96,14 +96,123 @@ The MSTL (Multiple Seasonal-Trend decomposition using LOESS) model decomposes th
 
 Import the `StatsForecast` class and the models you need.
 
-```java
+```python 
 from statsforecast import StatsForecast
 from statsforecast.models import MSTL, AutoARIMA
 ```
 
 First, instantiate the model and define the parameters. The electricity load presents seasonalities every 24 hours (Hourly) and every 24 * 7 (Daily) hours. Therefore, we will use `[24, 24 * 7]` as the seasonalities. See [this link](https://robjhyndman.com/hyndsight/seasonal-periods/) for a detailed explanation on how to set seasonal lengths. In this example we use the `AutoARIMA` model for the trend component, however, any StatsForecast model can be used. The complete list of models is available here.
 
+```python 
+models = [MSTL(
+            season_length=[24, 24 * 7], # seasonalities of the time series 
+            trend_forecaster=AutoARIMA(nmodels=10) # model used to forecast trend
+            )
+          ]
+```
+
+<Tip>
+The parameter `nmodels` of the AutoARIMA controls the number of models considered in stepwise search. The default is 94, reduce it to decrease training times!
+</Tip>
+
+We fit the model by instantiating a [`StatsForecast`](/statsforecast/api-reference/core#statsforecast) object with the following required parameters:
+
+- `models`: a list of models. Select the models you want from models and import them.
+- `freq`: a string indicating the frequency of the data. (See [panda’s available frequencies](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#offset-aliases).)
+
+```python 
+# Instantiate StatsForecast class as sf
+sf = StatsForecast(
+    df=Y_df, 
+    models=models,
+    freq='H', 
+)
+```
+
+<Tip>
+StatsForecast also supports this optional parameter.
+
+- `n_jobs`: n_jobs: int, number of jobs used in the parallel processing, use -1 for all cores. (Default: 1)
+
+- `fallback_model`: a model to be used if a model fails. (Default: none)
+</Tip>
+
+The `cross_validation` method allows the user to simulate multiple historic forecasts, greatly simplifying pipelines by replacing for loops with `fit` and `predict` methods. This method re-trains the model and forecast each window. See [this tutorial](https://nixtla.github.io/statsforecast/examples/getting_started_complete.html) for an animation of how the windows are defined.
+
+Use the `cross_validation` method to produce all the daily forecasts for September. To produce daily forecasts set the forecasting horizon `h` as 24. In this example we are simulating deploying the pipeline during September, so set the number of windows as 30 (one for each day). Finally, set the step size between windows as 24, to only produce one forecast per day.
 
 
+```python 
+crossvalidation_df = sf.cross_validation(
+    df=Y_df,
+    h=24,
+    step_size=24,
+    n_windows=30
+  )
+```
 
+```python
+crossvalidation_df.head()
+```
+
+<Warning>
+When using `cross_validation` make sure the forecasts are produced at the desired timestamps. Check the `cutoff` column which specifices the last timestamp before the forecasting window.
+</Warning>
+
+
+## Peak Detection
+
+Finally, we use the forecasts in `crossvaldation_df` to detect the daily hourly demand peaks. For each day, we set the detected peaks as the highest forecasts. In this case, we want to predict one peak (`npeaks`); depending on your setting and goals, this parameter might change. For example, the number of peaks can correspond to how many hours a battery can be discharged to reduce demand.
+
+```python 
+npeaks = 1 # Number of peaks
+```
+
+For the ERCOT 4CP detection task we are interested in correctly predicting the highest monthly load. Next, we filter the day in September with the highest hourly demand and predict the peak.
+
+```python 
+crossvalidation_df = crossvalidation_df.reset_index()[['ds','y','MSTL']]
+max_day = crossvalidation_df.iloc[crossvalidation_df['y'].argmax()].ds.day # Day with maximum load
+cv_df_day = crossvalidation_df.query('ds.dt.day == @max_day')
+max_hour = cv_df_day['y'].argmax()
+peaks = cv_df_day['MSTL'].argsort().iloc[-npeaks:].values # Predicted peaks
+```
+
+In the following plot we see how the MSTL model is able to correctly detect the coincident peak for September 2022.
+
+```python 
+import matplotlib.pyplot as plt
+```
+
+```python 
+plt.figure(figsize=(10, 5))
+plt.axvline(cv_df_day.iloc[max_hour]['ds'], color='black', label='True Peak')
+plt.scatter(cv_df_day.iloc[peaks]['ds'], cv_df_day.iloc[peaks]['MSTL'], color='green', label=f'Predicted Top-{npeaks}')
+plt.plot(cv_df_day['ds'], cv_df_day['y'], label='y', color='blue')
+plt.plot(cv_df_day['ds'], cv_df_day['MSTL'], label='Forecast', color='red')
+plt.xlabel('Time')
+plt.ylabel('Load (MW)')
+plt.grid()
+plt.legend()
+```
+
+
+<Warning>
+In this example we only include September. However, MSTL can correctly predict the peaks for the 4 months of 2022. You can try this by increasing the `nwindows` parameter of `cross_validation` or filtering the `Y_df` dataset. The complete run for all months take only 10 minutes.
+</Warning>
+
+## Next steps
+
+StatsForecast and MSTL in particular are good benchmarking models for peak detection. However, it might be useful to explore further and newer forecasting algorithms. We have seen particularly good results with the N-HiTS, a deep-learning model from Nixtla’s NeuralForecast library.
+
+Learn how to predict ERCOT demand peaks with our deep-learning N-HiTS model and the NeuralForecast library in this tutorial.
+
+
+## References
+
+- [Bandara, Kasun & Hyndman, Rob & Bergmeir, Christoph. (2021). “MSTL: A Seasonal-Trend Decomposition Algorithm for Time Series with Multiple Seasonal Patterns”.](https://arxiv.org/abs/2107.13462)
+- [Cristian Challu, Kin G. Olivares, Boris N. Oreshkin, Federico Garza, Max Mergenthaler-Canseco, Artur Dubrawski (2021). “N-HiTS: Neural Hierarchical Interpolation for Time Series Forecasting”. Accepted at AAAI 2023.](https://arxiv.org/abs/2201.12886)
+
+
+Give us a ⭐ on [Github](https://github.com/nixtla/statsforecast)
 

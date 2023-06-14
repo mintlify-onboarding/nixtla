@@ -48,19 +48,28 @@
     {
       "group": "Tutorials",
       "pages": [
-        "statsforecast/tutorials/getting-started-with-auto-arima-and-ets",
         "statsforecast/tutorials/anomaly-detection",
+        "statsforecast/tutorials/crossvalidation",
         "statsforecast/tutorials/electricity-load-forecasting",
         "statsforecast/tutorials/detect-demand-peaks",
-        {
-          "group": "Forecast at scale",
-          "pages": [
-            "statsforecast/tutorials/dask",
-            "statsforecast/tutorials/ray",
-            "statsforecast/tutorials/spark"
-          ]
-        },
-        "statsforecast/tutorials/crossvalidation"
+        "statsforecast/tutorials/garch-tutorial",
+        "statsforecast/tutorials/intermittent-data",
+        "statsforecast/tutorials/multiple-seasonalities",
+        "statsforecast/tutorials/statistical-neural-methods",
+        "statsforecast/tutorials/uncertainty-intervals"
+      ]
+    },
+    {
+      "group": "How to Guides", 
+      "pages": [
+        "statsforecast/how-to-guides/exogenous",
+        "statsforecast/how-to-guides/getting-started-with-auto-arima-and-ets"
+      ]
+    },
+    {
+      "group": "API Reference", 
+      "pages": [
+        "statsforecast/api-reference/core"
       ]
     }
   ],

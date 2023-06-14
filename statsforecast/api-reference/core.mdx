@@ -1,0 +1,310 @@
+---
+title: "Core Methods"
+description: "Methods for Fit, Predict, Forecast (fast), Cross Validation and plotting"
+---
+
+The core methods of [`StatsForecast`](#statsforecast) are:
+
+- `StatsForecast.fit`
+- `StatsForecast.predict`
+- [`StatsForecast.forecast`](#statsforecast.forecast)
+- [`StatsForecast.cross_validation`](#statsforecast.cross_validation)
+- `StatsForecast.plot`
+
+```python 
+def test_gp_df(df, sort_df):
+    df = df.set_index("ds", append=True)
+    if not df.index.is_monotonic_increasing and sort_df:
+        df = df.sort_index()
+    data = df.values.astype(np.float32)
+    indices_sizes = df.index.get_level_values("unique_id").value_counts(sort=False)
+    indices = indices_sizes.index
+    sizes = indices_sizes.values
+    cum_sizes = sizes.cumsum()
+    dates = df.index.get_level_values("ds")[cum_sizes - 1]
+    indptr = np.append(0, cum_sizes).astype(np.int32)
+    return GroupedArray(data, indptr), indices, dates, df.index
+```
+
+## StatsForecast
+
+```
+ StatsForecast (models:List[Any], freq:str, n_jobs:int=1, df:Union[pandas.
+                core.frame.DataFrame,polars.dataframe.frame.DataFrame,None
+                Type]=None, sort_df:bool=True,
+                fallback_model:Optional[Any]=None, verbose:bool=False)
+```
+
+Train statistical models.
+
+The [`StatsForecast`](#statsforecast) class allows you to efficiently fit multiple [`StatsForecast`](#statsforecast) models for large sets of time series. It operates with pandas DataFrame `df` that identifies series and datestamps with the `unique_id` and `ds` columns. The `y` column denotes the target time series variable.
+
+The class has memory-efficient [`StatsForecast.forecast`](#StatsForecast.forecast) method that avoids storing partial model outputs. While the `StatsForecast.fit` and `StatsForecast.predict` methods with Scikit-learn interface store the fitted models
+
+The [`StatsForecast`](#statsforecast) class offers parallelization utilities with Dask, Spark and Ray back-ends. See distributed computing example [here](https://github.com/Nixtla/statsforecast/tree/main/experiments/ray).
+
+<ResponseField name="models" type="typing.List[typing.Any]">
+    List of instantiated objects models.StatsForecast.
+</ResponseField>
+
+<ResponseField name="freq" type="str">
+    Frequency of the data. See [panda’s available frequencies](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#offset-aliases).
+</ResponseField>
+
+<ResponseField name="n_jobs" type="int" default = "1">
+    Number of jobs used in the parallel processing, use -1 for all cores.
+</ResponseField>
+
+<ResponseField name="df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]" default = "None">
+    DataFrame with columns [`unique_id`, `ds`, `y`] and exogenous.
+</ResponseField>
+
+<ResponseField name="sort_df" type="bool" default = "True">
+	If True, sort `df` by [`unique_id`,`ds`].
+</ResponseField>
+
+<ResponseField name="fallback_model" type="typing.Optional[typing.Any]" default = "True">
+    Model to be used if a model fails. Only works with the `forecast` and `cross_validation` methods.
+</ResponseField>
+
+<ResponseField name="verbose" type="bool" default = "False">
+    Prints TQDM progress bar when `n_jobs=1`.
+</ResponseField>
+
+```python 
+# StatsForecast's class usage example
+
+#from statsforecast.core import StatsForecast
+from statsforecast.models import ( 
+    ADIDA,
+    AutoARIMA,
+    CrostonClassic,
+    CrostonOptimized,
+    CrostonSBA,
+    ETS,
+    HistoricAverage,
+    IMAPA,
+    Naive,
+    RandomWalkWithDrift,
+    SeasonalExponentialSmoothing,
+    SeasonalNaive,
+    SeasonalWindowAverage,
+    SimpleExponentialSmoothing,
+    TSB,
+    WindowAverage,
+    DynamicOptimizedTheta,
+    AutoETS,
+    AutoCES
+)
+
+# Generate synthetic panel DataFrame for example
+panel_df = generate_series(n_series=9, equal_ends=False, engine='pandas')
+panel_df.groupby('unique_id').tail(4)
+```
+
+
+```python 
+# Declare list of instantiated StatsForecast estimators to be fitted
+# You can try other estimator's hyperparameters
+# You can try other methods from the `models.StatsForecast` collection
+# Check them here: https://nixtla.github.io/statsforecast/models.html
+models=[AutoARIMA(), Naive(), 
+        ETS(), AutoARIMA(allowmean=True, alias='MeanAutoARIMA')] 
+
+# Instantiate StatsForecast class
+fcst = StatsForecast(df=panel_df,
+                     models=models,
+                     freq='D', 
+                     n_jobs=1, 
+                     verbose=True)
+
+# Efficiently predict
+fcsts_df = fcst.forecast(h=4, fitted=True)
+fcsts_df.groupby('unique_id').tail(4)
+```
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L836)
+
+
+
+## StatsForecast.fit
+
+```
+ StatsForecast.fit (df:Union[pandas.core.frame.DataFrame,polars.dataframe.
+                    frame.DataFrame,NoneType]=None, sort_df:bool=True, pre
+                    diction_intervals:Optional[statsforecast.utils.Conform
+                    alIntervals]=None)
+```
+
+Fit statistical models.
+
+Fit `models` to a large set of time series from DataFrame `df` and store fitted models for later inspection.
+
+<ResponseField name="df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]" default="none">
+    DataFrame with columns [`unique_id`, `ds`, `y`] and exogenous. If None, the [`StatsForecast`](#statsforecast) class should have been instantiated using `df`.
+</ResponseField>
+
+<ResponseField name="sort_df" type="bool" default="True">
+    If True, sort `df` by [`unique_id`,`ds`].
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+    Configuration to calibrate prediction intervals (Conformal Prediction).
+</ResponseField>
+
+<ResponseField name="Returns" type="StatsForecast">
+    Returns with stored [`StatsForecast`](#statsforecast) fitted `models`.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L920)
+
+
+
+## SatstForecast.predict
+
+```
+ SatstForecast.predict (h:int, X_df:Union[pandas.core.frame.DataFrame,pola
+                        rs.dataframe.frame.DataFrame,NoneType]=None,
+                        level:Optional[List[int]]=None)
+```
+
+Predict statistical models.
+
+Use stored fitted `models` to predict large set of time series from DataFrame `df`.
+
+<ResponseField name="h" type="int">
+    Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X_df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]" default="None">
+    DataFrame with [`unique_id`, `ds`] columns and `df`’s future exogenous.
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+    Confidence levels between 0 and 100 for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="pandas.DataFrame | polars.DataFrame	">
+    DataFrame with `models` columns for point predictions and probabilistic predictions for all fitted `models`.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L954)
+
+
+## StatsForecast.fit_predict
+
+```
+ StatsForecast.fit_predict (h:int, df:Union[pandas.core.frame.DataFrame,po
+                            lars.dataframe.frame.DataFrame,NoneType]=None,
+                            X_df:Union[pandas.core.frame.DataFrame,polars.
+                            dataframe.frame.DataFrame,NoneType]=None,
+                            level:Optional[List[int]]=None,
+                            sort_df:bool=True, prediction_intervals:Option
+                            al[statsforecast.utils.ConformalIntervals]=Non
+                            e)
+```
+
+Fit and Predict with statistical models.
+
+This method avoids memory burden due from object storage. It is analogous to Scikit-Learn `fit_predict` without storing information. It requires the forecast horizon `h` in advance.
+
+In contrast to [`StatsForecast.forecast`](#statsforecast.forecast) this method stores partial models outputs.
+
+<ResponseField name="h" type="int">
+    Forecast horizon.
+</ResponseField>
+
+<ResponseField name="df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]" default="None">
+    DataFrame with columns [`unique_id`, `ds`, `y`] and exogenous variables. If None, the [`StatsForecast`](#statsforecast) class should have been instantiated using `df`.
+</ResponseField>
+
+<ResponseField name="X_df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]" default="None">
+    DataFrame with [`unique_id`, `ds`] columns and `df`’s future exogenous.
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+    Confidence levels between 0 and 100 for prediction intervals.
+</ResponseField>
+
+<ResponseField name="sort_df" type="bool" default="True">
+If True, sort `df` by [`unique_id`,`ds`].
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+Configuration to calibrate prediction intervals (Conformal Prediction).
+</ResponseField>
+
+<ResponseField name="Returns" type="pandas.DataFrame | polars.DataFrame">
+DataFrame with `models` columns for point predictions and probabilistic predictions for all fitted `models`.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L1009)
+
+## StatsForecast.forecast
+
+```
+ StatsForecast.forecast (h:int, df:Union[pandas.core.frame.DataFrame,polar
+                         s.dataframe.frame.DataFrame,NoneType]=None, X_df:
+                         Union[pandas.core.frame.DataFrame,polars.datafram
+                         e.frame.DataFrame,NoneType]=None,
+                         level:Optional[List[int]]=None,
+                         fitted:bool=False, sort_df:bool=True, prediction_
+                         intervals:Optional[statsforecast.utils.ConformalI
+                         ntervals]=None)
+```
+
+Memory Efficient predictions.
+
+This method avoids memory burden due from object storage. It is analogous to Scikit-Learn `fit_predict` without storing information. It requires the forecast horizon `h` in advance.
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]" default="None">
+DataFrame with columns [`unique_id`, `ds`, `y`] and exogenous. If None, the [`StatsForecast`](#statsforecast) class should have been instantiated using `df`.
+</ResponseField>
+
+<ResponseField name="X_df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]" default="None">
+DataFrame with [`unique_id`, `ds`] columns and `df`’s future exogenous.
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels between 0 and 100 for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Wether or not return insample predictions.
+</ResponseField>
+
+<ResponseField name="sort_df" type="bool" default="True">
+If True, sort df by [`unique_id`,`ds`].
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+Configuration to calibrate prediction intervals (Conformal Prediction).
+</ResponseField>
+
+<ResponseField name="Returns" type="pandas.DataFrame | polars.DataFrame">
+DataFrame with models columns for point predictions and probabilistic predictions for all fitted models.
+</ResponseField>
+
+```python 
+# StatsForecast.forecast method usage example
+
+#from statsforecast.core import StatsForecast
+from statsforecast.utils import AirPassengersDF as panel_df
+from statsforecast.models import AutoARIMA, Naive
+
+# Instantiate StatsForecast class
+fcst = StatsForecast(df=panel_df,
+                     models=[AutoARIMA(), Naive()],
+                     freq='D', n_jobs=1)
+
+# Efficiently predict without storing memory
+fcsts_df = fcst.forecast(h=4, fitted=True)
+fcsts_df.groupby('unique_id').tail(4)
+```
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L1073)

@@ -1,0 +1,16 @@
+---
+title: "Volatility forecasting (GARCH & ARCH)"
+description: "In this example, we’ll forecast the volatility of the S&P 500 and several publicly traded companies using GARCH and ARCH models"
+---
+
+<Accordion title="Prerequesites">
+    This tutorial assumes basic familiarity with StatsForecast. For a minimal example visit the [Quick Start](/statsforecast/getting-started/quickstart)
+</Accordion>
+
+## Introduction
+
+The Generalized Autoregressive Conditional Heteroskedasticity (GARCH) model is used for time series that exhibit non-constant volatility over time. Here volatility refers to the conditional standard deviation. The GARCH(p,q) model is given by
+
+![](CleanShot2023-06-13at11.23.11.png)
+
+<Latex>$$v_t$$ </Latex>
