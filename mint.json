@@ -69,7 +69,15 @@
     {
       "group": "API Reference", 
       "pages": [
-        "statsforecast/api-reference/core"
+        "statsforecast/api-reference/core",
+        "statsforecast/api-reference/distributed-fugue",
+        "statsforecast/api-reference/models"
+      ]
+    },
+    {
+      "group": "",
+      "pages": [
+        "neuralforecast/introduction"
       ]
     }
   ],
