@@ -1,0 +1,729 @@
+---
+title: "Models"
+description: "Models currently supported by StatsForecast"
+---
+
+StatsForecast offers a wide variety of models grouped in the following categories:
+
+- **Auto Forecast**: Automatic forecasting tools search for the best parameters and select the best possible model for a series of time series. These tools are useful for large collections of univariate time series. Includes automatic versions of: Arima, ETS, Theta, CES.
+
+- **Exponential Smoothing**: Uses a weighted average of all past observations where the weights decrease exponentially into the past. Suitable for data with clear trend and/or seasonality. Use the `SimpleExponential` family for data with no clear trend or seasonality. Examples: SES, Holt’s Winters, SSO.
+
+- **Benchmark models**: classical models for establishing baselines. Examples: Mean, Naive, Random Walk
+
+- **Intermittent or Sparse models**: suited for series with very few non-zero observations. Examples: CROSTON, ADIDA, IMAPA
+
+- **Multiple Seasonalities**: suited for signals with more than one clear seasonality. Useful for low-frequency data like electricity and logs. Examples: MSTL.
+
+- **Theta Models**: fit two theta lines to a deseasonalized time series, using different techniques to obtain and combine the two theta lines to produce the final forecasts. Examples: Theta, DynamicTheta
+
+- **GARCH Model**: suited for modeling time series that exhibit non-constant volatility over time. Commonly used in finance to model stock prices, exchange rates, interest rates, and other financial instruments. The ARCH model is a particular case of GARCH.
+
+
+## Automatic Forecasting
+
+### AutoARIMA
+
+#### AutoARIMA
+
+```
+ AutoARIMA (d:Optional[int]=None, D:Optional[int]=None, max_p:int=5,
+            max_q:int=5, max_P:int=2, max_Q:int=2, max_order:int=5,
+            max_d:int=2, max_D:int=1, start_p:int=2, start_q:int=2,
+            start_P:int=1, start_Q:int=1, stationary:bool=False,
+            seasonal:bool=True, ic:str='aicc', stepwise:bool=True,
+            nmodels:int=94, trace:bool=False,
+            approximation:Optional[bool]=False, method:Optional[str]=None,
+            truncate:Optional[bool]=None, test:str='kpss',
+            test_kwargs:Optional[str]=None, seasonal_test:str='seas',
+            seasonal_test_kwargs:Optional[Dict]=None,
+            allowdrift:bool=False, allowmean:bool=False,
+            blambda:Optional[float]=None, biasadj:bool=False,
+            parallel:bool=False, num_cores:int=2, season_length:int=1,
+            alias:str='AutoARIMA', prediction_intervals:Optional[statsfore
+            cast.utils.ConformalIntervals]=None)
+```
+
+AutoARIMA model.
+
+Automatically selects the best ARIMA (AutoRegressive Integrated Moving Average) model using an information criterion. Default is Akaike Information Criterion (AICc).
+
+**Note:**
+
+This implementation is a mirror of Hyndman’s [forecast::auto.arima](https://github.com/robjhyndman/forecast).
+
+**References:**
+
+[Rob J. Hyndman, Yeasmin Khandakar (2008). “Automatic Time Series Forecasting: The forecast package for R”.](https://www.jstatsoft.org/article/view/v027i03)
+
+<ResponseField name="d" type="typing.Optional[int]" default="None">
+    Order of first-differencing.
+</ResponseField>
+
+<ResponseField name="D" type="typing.Optional[int]" default="None">
+    Order of seasonal-differencing.
+</ResponseField>
+
+<ResponseField name="max_p" type="int" default="5">
+Max autorregresives p.
+</ResponseField>
+
+<ResponseField name="max_q" type="int" default="5">
+Max moving averages q.
+</ResponseField>
+
+
+<ResponseField name="max_P" type="int" default="2">
+Max seasonal autorregresives P.
+</ResponseField>
+
+<ResponseField name="max_Q" type="int" default="2">
+Max seasonal moving averages Q.
+</ResponseField>
+
+<ResponseField name="max_order" type="int" default="5">
+Max p+q+P+Q value if not stepwise selection.
+</ResponseField>
+
+<ResponseField name="max_d" type="int" default="2">
+Max non-seasonal differences.
+</ResponseField>
+
+<ResponseField name="max_D" type="int" default="1">
+Max seasonal differences.
+</ResponseField>
+
+
+<ResponseField name="start_p" type="int" default="2">
+Starting value of p in stepwise procedure.
+</ResponseField>
+
+<ResponseField name="start_q" type="int" default="2">
+Starting value of q in stepwise procedure.
+</ResponseField>
+
+<ResponseField name="start_P" type="int" default="1">
+Starting value of P in stepwise procedure.
+</ResponseField>
+
+<ResponseField name="start_Q" type="int" default="1">
+Starting value of Q in stepwise procedure.
+</ResponseField>
+
+<ResponseField name="stationary" type="bool" default="False">
+If True, restricts search to stationary models.
+</ResponseField>
+
+<ResponseField name="seasonal" type="bool" default="True">
+If False, restricts search to non-seasonal models.
+</ResponseField>
+
+<ResponseField name="ic" type="str" default="aicc">
+Information criterion to be used in model selection.
+</ResponseField>
+
+<ResponseField name="stepwise" type="bool" default="True">
+If True, will do stepwise selection (faster).
+</ResponseField>
+
+<ResponseField name="nmodels" type="int" default="94">
+Number of models considered in stepwise search.
+</ResponseField>
+
+<ResponseField name="trace" type="bool" default="False">
+If True, the searched ARIMA models is reported.
+</ResponseField>
+
+<ResponseField name="approximation" type="typing.Optional[bool]" default="False">
+If True, conditional sums-of-squares estimation, final MLE.
+</ResponseField>
+
+<ResponseField name="method" type="typing.Optional[str]" default="None">
+Fitting method between maximum likelihood or sums-of-squares.
+</ResponseField>
+
+<ResponseField name="truncate" type="typing.Optional[bool]" default="None">
+Observations truncated series used in model selection.
+</ResponseField>
+
+<ResponseField name="st" type="str" default="kpss">
+Unit root test to use. See ndiffs for details.
+</ResponseField>
+
+<ResponseField name="test_kwargs" type="typing.Optional[str]" default="None">
+Unit root test additional arguments.
+</ResponseField>
+
+<ResponseField name="seasonal_test" type="str" default="seas">
+Selection method for seasonal differences.
+</ResponseField>
+
+<ResponseField name="seasonal_test_kwargs" type="typing.Optional[typing.Dict]" default="None">
+Seasonal unit root test arguments.
+</ResponseField>
+
+<ResponseField name="allowdrift" type="bool" default="False">
+If True, drift models terms considered.
+</ResponseField>
+
+<ResponseField name="allowmean" type="bool" default="False">
+If True, non-zero mean models considered.
+</ResponseField>
+
+<ResponseField name="blambda" type="typing.Optional[float]" default="None">
+Box-Cox transformation parameter.
+</ResponseField>
+
+<ResponseField name="biasadj" type="bool" default="False">
+Use adjusted back-transformed mean Box-Cox.
+</ResponseField>
+
+<ResponseField name="parallel" type="bool" default="False">
+If True and stepwise=False, then parallel search.
+</ResponseField>
+
+<ResponseField name="num_cores" type="int" default="2">
+Amount of parallel processes to be used if parallel=True.
+</ResponseField>
+
+<ResponseField name="season_length" type="int" default="1">
+Number of observations per unit of time. Ex: 24 Hourly data.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="AutoARIMA">
+Custom name of the model.
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+Information to compute conformal prediction intervals.
+
+By default, the model will compute the native prediction
+intervals.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L299)
+
+#### AutoARIMA.fit
+
+```
+ AutoARIMA.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the AutoARIMA model.
+
+Fit an AutoARIMA to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+<ResponseField name="y" type="ndarray" >
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns">
+AutoARIMA fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L364)
+
+
+#### AutoARIMA.predict
+
+```
+ AutoARIMA.predict (h:int, X:Optional[numpy.ndarray]=None,
+                    level:Optional[List[int]]=None)
+```
+
+Predict with fitted AutoArima.
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None" >
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict"  >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L401)
+
+
+#### AutoARIMA.predict_in_sample
+
+```
+ AutoARIMA.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted AutoArima insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None" >
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L421)
+
+#### AutoARIMA.forecast
+
+```
+AutoARIMA.forecast (y:numpy.ndarray, h:int,
+                     X:Optional[numpy.ndarray]=None,
+                     X_future:Optional[numpy.ndarray]=None,
+                     level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Memory Efficient AutoARIMA predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>   
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField> 
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x) optional exogenous.
+</ResponseField> 
+
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField> 
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not returns insample predictions.
+</ResponseField> 
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L515)
+
+
+#### AutoARIMA.forward
+
+```
+ AutoARIMA.forward (y:numpy.ndarray, h:int,
+                    X:Optional[numpy.ndarray]=None,
+                    X_future:Optional[numpy.ndarray]=None,
+                    level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Apply fitted ARIMA model to a new time series.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>   
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField> 
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x) optional exogenous.
+</ResponseField> 
+
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField> 
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not returns insample predictions.
+</ResponseField> 
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# AutoARIMA's usage example
+
+from statsforecast.models import AutoARIMA
+from statsforecast.utils import AirPassengers as ap
+
+arima = AutoARIMA(season_length=4)
+arima = arima.fit(y=ap)
+y_hat_dict = arima.predict(h=4, level=[80])
+y_hat_dict
+```
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L572)
+
+### AutoETS
+
+```
+AutoETS (season_length:int=1, model:str='ZZZ',
+          damped:Optional[bool]=None, alias:str='AutoETS')
+```
+
+Automatic Exponential Smoothing model.
+
+Automatically selects the best ETS (Error, Trend, Seasonality) model using an information criterion. Default is Akaike Information Criterion (AICc), while particular models are estimated using maximum likelihood. The state-space equations can be determined based on their _M_ multiplicative, _A_ additive, _Z_ optimized or _N_ ommitted components. The `model` string parameter defines the ETS equations: E in [_M,A,Z_], T in [_N,A,M,Z_], and S in [_N,A,M,Z_].
+
+For example when model=‘ANN’ (additive error, no trend, and no seasonality), ETS will explore only a simple exponential smoothing.
+
+If the component is selected as ‘Z’, it operates as a placeholder to ask the AutoETS model to figure out the best parameter.
+
+**Note:**
+
+This implementation is a mirror of Hyndman’s [forecast::ets](https://github.com/robjhyndman/forecast).
+
+**References:**
+
+[Rob J. Hyndman, Yeasmin Khandakar (2008). “Automatic Time Series Forecasting: The forecast package for R”](https://www.jstatsoft.org/article/view/v027i03)
+
+[Hyndman, Rob, et al (2008). “Forecasting with exponential smoothing: the state space approach”](https://robjhyndman.com/expsmooth/)
+
+<ResponseField name="season_length" type="int" default="1">
+Number of observations per unit of time. Ex: 24 Hourly data.
+</ResponseField>
+
+<ResponseField name="model" type="str" default="ZZZ">
+Controlling state-space-equations.
+</ResponseField>
+
+<ResponseField name="damped" type="typing.Optional[bool]" default="None">
+A parameter that ‘dampens’ the trend.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="AutoETS">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L622)
+
+
+#### AutoETS.fit
+
+```
+ AutoETS.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the Exponential Smoothing model.
+
+Fit an Exponential Smoothing model to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+
+<ResponseField name="y" type="ndarray" >
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns">
+Exponential Smoothing fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L650)
+
+
+#### AutoETS.predict
+
+```
+ AutoETS.predict (h:int, X:Optional[numpy.ndarray]=None,
+                  level:Optional[List[int]]=None)
+```
+
+Predict with fitted Exponential Smoothing.
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional exogenpus of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None" >
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L680)
+
+
+#### AutoETS.predict_in_sample
+
+```
+ AutoETS.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted Exponential Smoothing insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None" >
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L700)
+
+
+#### AutoETS.forecast
+
+```
+ AutoETS.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                   X_future:Optional[numpy.ndarray]=None,
+                   level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Memory Efficient Exponential Smoothing predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray" >
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="h" type="ndarray" >
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None" >
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False" >
+Whether or not returns insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L754)
+
+
+#### AutoETS.forward
+
+```
+ AutoETS.forward (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                  X_future:Optional[numpy.ndarray]=None,
+                  level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Apply fitted Exponential Smoothing model to a new time series.
+
+
+<ResponseField name="y" type="ndarray" >
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="h" type="ndarray" >
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None" >
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False" >
+Whether or not returns insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# AutoETS' usage example
+
+from statsforecast.models import AutoETS
+from statsforecast.utils import AirPassengers as ap
+
+# Multiplicative trend, optimal error and seasonality
+autoets = AutoETS(model='ZMZ',  
+              season_length=4)
+autoets = autoets.fit(y=ap)
+y_hat_dict = autoets.predict(h=4)
+y_hat_dict
+```
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L807)
+
+
+#### ETS
+
+```
+ETS (season_length:int=1, model:str='ZZZ', damped:Optional[bool]=None,
+      alias:str='ETS')
+```
+
+Automatically selects the best ETS (Error, Trend, Seasonality) model using an information criterion. Default is Akaike Information Criterion (AICc), while particular models are estimated using maximum likelihood. The state-space equations can be determined based on their _M_ multiplicative, _A_ additive, _Z_ optimized or _N_ ommitted components. The `model` string parameter defines the ETS equations: E in [_M,A,Z_], T in [_N,A,M,Z_], and S in [_N,A,M,Z_].
+
+For example when model=‘ANN’ (additive error, no trend, and no seasonality), ETS will explore only a simple exponential smoothing.
+
+If the component is selected as ‘Z’, it operates as a placeholder to ask the AutoETS model to figure out the best parameter.
+
+**Note:**
+
+This implementation is a mirror of Hyndman’s [forecast::ets](https://github.com/robjhyndman/forecast).
+
+**References:**
+
+[Rob J. Hyndman, Yeasmin Khandakar (2008). “Automatic Time Series Forecasting: The forecast package for R”.](https://www.jstatsoft.org/article/view/v027i03)
+
+[Hyndman, Rob, et al (2008). “Forecasting with exponential smoothing: the state space approach”.](https://robjhyndman.com/expsmooth/)
+
+<ResponseField name="season_length" type="int" default="1">
+Number of observations per unit of time. Ex: 24 Hourly data.
+</ResponseField>
+
+<ResponseField name="model" type="str" default="ZZZ">
+Controlling state-space-equations.
+</ResponseField>
+
+<ResponseField name="damped" type="typing.Optional[bool]" default="None">
+A parameter that ‘dampens’ the trend.
+</ResponseField>
+
+<ResponseField name="damped" type="typing.Optional[bool]" default="None">
+A parameter that ‘dampens’ the trend.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="ETS">
+Custom name of the model.
+</ResponseField>
+
+```python
+ets = ETS(model='ZMZ', season_length=4)
+```
+
+
+### AutoCES
+
+#### AutoCES
+
+```
+ AutoCES (season_length:int=1, model:str='Z', alias:str='CES', prediction_
+          intervals:Optional[statsforecast.utils.ConformalIntervals]=None)
+```
+
+Complex Exponential Smoothing model.
+
+Automatically selects the best Complex Exponential Smoothing model using an information criterion. Default is Akaike Information Criterion (AICc), while particular models are estimated using maximum likelihood. The state-space equations can be determined based on their _S_ Simple, _P_ parial, _Z_ optimized, or _N_ ommitted components. The `model` string parameter defines the kind of CES model: _N_ for simple CES (withous seasonality), _S_ for simple seasonality (lagged CES), _P_ for partial seasonality (without complex part), _F_ for full seasonality (lagged CES with real and complex seasonal parts).
+
+If the component is selected as ‘Z’, it operates as a placeholder to ask the AutoCES model to figure out the best parameter.
+
+**References:**
+
+[Svetunkov, Ivan & Kourentzes, Nikolaos. (2015). “Complex Exponential Smoothing”. 10.13140/RG.2.1.3757.2562.](https://onlinelibrary.wiley.com/doi/full/10.1002/nav.22074)
+
+<ResponseField name="season_length" type="int" default="1">
+Number of observations per unit of time. Ex: 24 Hourly data.
+</ResponseField>
+
+<ResponseField name="model" type="str" default="Z">
+Controlling state-space-equations.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="CES">
+Custom name of the model.
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+Information to compute conformal prediction intervals.
+
+By default, the model will compute the native prediction
+intervals.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L880)
+
+
+#### AutoCES.fit
+
+```
+ AutoCES.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the Complex Exponential Smoothing model.
+
+Fit the Complex Exponential Smoothing model to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+<ResponseField name="y" type="ndarray" >
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None" >
+Optional exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns">
+Complex Exponential Smoothing fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L908)
+
+
+#### AutoCES.predict
+
+```
+ AutoCES.predict (h:int, X:Optional[numpy.ndarray]=None,
+                  level:Optional[List[int]]=None)
+```
+Predict with fitted Exponential Smoothing.
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>    
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>    
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None"></ResponseField>    
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L942)
