@@ -308,3 +308,330 @@ fcsts_df.groupby('unique_id').tail(4)
 
 
 [source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L1073)
+
+
+## StatsForecast.forecast_fitted_values
+
+```
+ StatsForecast.forecast_fitted_values ()
+```
+
+Access insample predictions.
+
+After executing [`StatsForecast.forecast`](#statsforecast.forecast), you can access the insample prediction values for each model. To get them, you need to pass `fitted=True` to the [`StatsForecast.forecast`](#statsforecast.forecast) method and then use the `StatsForecast.forecast_fitted_values` method.
+
+```python 
+# StatsForecast.forecast_fitted_values method usage example
+
+#from statsforecast.core import StatsForecast
+from statsforecast.utils import AirPassengersDF as panel_df
+from statsforecast.models import Naive
+
+# Instantiate StatsForecast class
+fcst = StatsForecast(df=panel_df,
+                     models=[AutoARIMA()],
+                     freq='D', n_jobs=1)
+
+# Access insample predictions
+fcsts_df = fcst.forecast(h=12, fitted=True, level=(90, 10))
+insample_fcsts_df = fcst.forecast_fitted_values()
+insample_fcsts_df.tail(4)
+```
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L1103)
+
+## StatsForecast.cross_validation
+
+```
+StatsForecast.cross_validation (h:int, df:Union[pandas.core.frame.DataFra
+                                 me,polars.dataframe.frame.DataFrame,NoneT
+                                 ype]=None, n_windows:int=1,
+                                 step_size:int=1,
+                                 test_size:Optional[int]=None,
+                                 input_size:Optional[int]=None,
+                                 level:Optional[List[int]]=None,
+                                 fitted:bool=False, refit:bool=True,
+                                 sort_df:bool=True, prediction_intervals:O
+                                 ptional[statsforecast.utils.ConformalInte
+                                 rvals]=None)
+```
+
+Temporal Cross-Validation.
+
+Efficiently fits a list of [`StatsForecast`](#statsforecast) models through multiple training windows, in either chained or rolled manner.
+
+`StatsForecast.models`’ speed allows to overcome this evaluation technique high computational costs. Temporal cross-validation provides better model’s generalization measurements by increasing the test’s length and diversity.
+
+
+<ResponseField name="h" type="int"></ResponseField>
+
+<ResponseField name="df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]	"></ResponseField>
+
+<ResponseField name="n_windows" type="int"></ResponseField>
+
+<ResponseField name="step_size" type="int"></ResponseField>
+
+<ResponseField name="test_size" type="typing.Optional[int]"></ResponseField>
+
+<ResponseField name="input_size" type="typing.Optional[int]"></ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]"></ResponseField>
+
+<ResponseField name="fitted" type="bool"></ResponseField>
+
+<ResponseField name="refit" type="bool"></ResponseField>
+
+<ResponseField name="sort_df" type="bool"></ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]"></ResponseField>
+
+<ResponseField name="Returns" type="pandas.DataFrame"></ResponseField>
+
+```python 
+# StatsForecast.crossvalidation method usage example
+
+#from statsforecast.core import StatsForecast
+from statsforecast.utils import AirPassengersDF as panel_df
+from statsforecast.models import Naive
+
+# Instantiate StatsForecast class
+fcst = StatsForecast(df=panel_df,
+                     models=[Naive()],
+                     freq='D', n_jobs=1, verbose=True)
+
+# Access insample predictions
+rolled_fcsts_df = fcst.cross_validation(14, n_windows=2)
+rolled_fcsts_df.head(4)
+```
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L1216)
+
+## StatsForecast.cross_validation_fitted_values
+
+```
+ StatsForecast.cross_validation_fitted_values ()
+```
+
+Access insample cross validated predictions.
+
+After executing [`StatsForecast.cross_validation`](#statsforecast.cross_validation), you can access the insample prediction values for each model and window. To get them, you need to pass `fitted=True` to the [`StatsForecast.cross_validation`](#statsforecast.cross_validation) method and then use the `StatsForecast.cross_validation_fitted_values` method.
+
+```python 
+# StatsForecast.cross_validation_fitted_values method usage example
+
+#from statsforecast.core import StatsForecast
+from statsforecast.utils import AirPassengersDF as panel_df
+from statsforecast.models import Naive
+
+# Instantiate StatsForecast class
+fcst = StatsForecast(df=panel_df,
+                     models=[Naive()],
+                     freq='D', n_jobs=1)
+
+# Access insample predictions
+rolled_fcsts_df = fcst.cross_validation(h=12, n_windows=2, fitted=True)
+insample_rolled_fcsts_df = fcst.cross_validation_fitted_values()
+insample_rolled_fcsts_df.tail(4)
+```
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/core.py#L1408)
+
+## StatsForecast.plot
+
+```
+ StatsForecast.plot
+                     (df:Union[pandas.core.frame.DataFrame,polars.datafram
+                     e.frame.DataFrame], forecasts_df:Union[pandas.core.fr
+                     ame.DataFrame,polars.dataframe.frame.DataFrame,NoneTy
+                     pe]=None, unique_ids:Union[List[str],NoneType,numpy.n
+                     darray]=None, plot_random:bool=True,
+                     models:Optional[List[str]]=None,
+                     level:Optional[List[float]]=None,
+                     max_insample_length:Optional[int]=None,
+                     plot_anomalies:bool=False, engine:str='plotly',
+                     resampler_kwargs:Optional[Dict]=None)
+```
+
+Plot forecasts and insample values.
+
+<ResponseField name="df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame]"></ResponseField>
+
+<ResponseField name="forecasts_df" type="typing.Union[pandas.core.frame.DataFrame, polars.dataframe.frame.DataFrame, NoneType]"></ResponseField>
+
+<ResponseField name="unique_ids" type="typing.Union[typing.List[str], NoneType, numpy.ndarray"></ResponseField>
+
+<ResponseField name="plot_random" type="bool"></ResponseField>
+
+<ResponseField name="models" type="typing.Optional[typing.List[str]]"></ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[float]]"></ResponseField>
+
+<ResponseField name="max_insample_length" type="typing.Optional[int]"></ResponseField>
+
+<ResponseField name="plot_anomalies" type="bool"></ResponseField>
+
+<ResponseField name="engine" type="str"></ResponseField>
+
+<ResponseField name="resampler_kwargs" type="typing.Optional[typing.Dict]"></ResponseField>
+
+## Misc 
+
+### Integer datestamp
+
+The [`StatsForecast`](#statsforecast) class can also receive integers as datestamp, the following example shows how to do it.
+
+```python 
+# from statsforecast.core import StatsForecast
+from statsforecast.utils import AirPassengers as ap
+from statsforecast.models import HistoricAverage
+```
+
+```python 
+int_ds_df = pd.DataFrame({'ds': np.arange(1, len(ap) + 1), 'y': ap})
+int_ds_df.insert(0, 'unique_id', 'AirPassengers')
+int_ds_df.set_index('unique_id', inplace=True)
+int_ds_df.head()
+```
+```python 
+int_ds_df.tail()
+```
+```python 
+int_ds_df
+```
+```python
+fcst = StatsForecast(df=int_ds_df, models=[HistoricAverage()], freq='D')
+horizon = 7
+forecast = fcst.forecast(horizon)
+forecast.head()
+```
+```python 
+last_date = int_ds_df['ds'].max()
+test_eq(forecast['ds'].values, np.arange(last_date + 1, last_date + 1 + horizon))
+```
+```python 
+int_ds_cv = fcst.cross_validation(h=7, test_size=8, n_windows=None)
+int_ds_cv
+```
+
+
+### External regressors
+
+Every column after **y** is considered an external regressor and will be passed to the models that allow them. If you use them you must supply the future values to the [`StatsForecast.forecast`](#statsforecast.forecast) method.
+
+```python 
+class LinearRegression:
+    
+    def __init__(self):
+        pass
+    
+    def fit(self, y, X):
+        self.coefs_, *_ = np.linalg.lstsq(X, y, rcond=None)
+        return self
+    
+    def predict(self, h, X):
+        mean = X @ coefs
+        return mean
+    
+    def __repr__(self):
+        return 'LinearRegression()'
+    
+    def forecast(self, y, h, X=None, X_future=None, fitted=False):
+        coefs, *_ = np.linalg.lstsq(X, y, rcond=None)
+        return {'mean': X_future @ coefs}
+    
+    def new(self):
+        b = type(self).__new__(type(self))
+        b.__dict__.update(self.__dict__)
+        return b
+```
+```python 
+series_xreg = series = generate_series(10_000, equal_ends=True)
+series_xreg['intercept'] = 1
+series_xreg['dayofweek'] = series_xreg['ds'].dt.dayofweek
+series_xreg = pd.get_dummies(series_xreg, columns=['dayofweek'], drop_first=True)
+series_xreg
+```
+```python 
+dates = sorted(series_xreg['ds'].unique())
+valid_start = dates[-14]
+train_mask = series_xreg['ds'] < valid_start
+series_train = series_xreg[train_mask]
+series_valid = series_xreg[~train_mask]
+X_valid = series_valid.drop(columns=['y'])
+fcst = StatsForecast(
+    df=series_train,
+    models=[LinearRegression()],
+    freq='D',
+)
+xreg_res = fcst.forecast(14, X_df=X_valid)
+xreg_res['y'] = series_valid['y'].values
+```
+```python 
+xreg_res.groupby('ds').mean().plot()
+```
+```python 
+xreg_res_cv = fcst.cross_validation(h=3, test_size=5, n_windows=None)
+```
+
+
+### Prediction intervals
+
+You can pass the argument `level` to the [`StatsForecast.forecast`](#statsforecast.forecast) method to calculate prediction intervals. Not all models can calculate them at the moment, so we will only obtain the intervals of those models that have it implemented.
+
+```python
+ap_df = pd.DataFrame({'ds': np.arange(ap.size), 'y': ap}, index=pd.Index([0] * ap.size, name='unique_id'))
+sf = StatsForecast(
+    models=[
+        SeasonalNaive(season_length=12), 
+        AutoARIMA(season_length=12)
+    ],
+    freq='M',
+    n_jobs=1
+)
+ap_ci = sf.forecast(df=ap_df, h=12, level=(80, 95))
+fcst.plot(ap_ci, level=[80])
+```
+
+
+### Conformal Prediction intervals
+
+You can also add conformal intervals using the following code.
+
+```python 
+from statsforecast.utils import ConformalIntervals
+```
+```python 
+sf = StatsForecast(
+    models=[
+        AutoARIMA(season_length=12),
+        AutoARIMA(
+            season_length=12, 
+            prediction_intervals=ConformalIntervals(n_windows=2, h=12),
+            alias='ConformalAutoARIMA'
+        ),
+    ],
+    freq='M',
+    n_jobs=1
+)
+ap_ci = sf.forecast(df=ap_df, h=12, level=(80, 95))
+fcst.plot(ap_ci, level=[80])
+```
+You can also compute conformal intervals for all the models that support them, using the following,
+
+```python 
+sf = StatsForecast(
+    models=[
+        AutoARIMA(season_length=12),
+    ],
+    freq='M',
+    n_jobs=1
+)
+ap_ci = sf.forecast(
+    df=ap_df, 
+    h=12, 
+    level=(50, 80, 95), 
+    prediction_intervals=ConformalIntervals(h=12),
+)
+fcst.plot(ap_ci, level=[50, 80, 95])
+```
+
+Give us a ⭐ on [Github](https://github.com/nixtla/statsforecast)
