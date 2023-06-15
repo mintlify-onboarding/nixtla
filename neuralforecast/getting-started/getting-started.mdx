@@ -1,0 +1,51 @@
+---
+title: "Getting Started"
+description: "Fit an LSTM and NHITS model"
+---
+
+This notebook provides an example on how to start using the main functionalities of the [NeuralForecast](/neuralforecast/api-reference/core) library. The NeuralForecast class allows users to easily interact with `NeuralForecast.models` PyTorch models. In this example we will forecast AirPassengers data with a classic [LSTM](/neuralforecast/api-reference/models-documentation/lstm) and the recent [NHITS](/neuralforecast/api-reference/models-documentation/nhits) models. The full list of available models is available [here](/neuralforecast/api-reference/core).
+
+You can run these experiments using GPU with Google Colab.
+
+[![Deploy to Render](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Nixtla/statsforecast/blob/main/nbs/examples/ElectricityLoadForecasting.ipynb)
+
+## 1. Installing NeuralForecast
+
+```sql
+!pip install neuralforecast
+```
+
+```python
+import numpy as np
+import pandas as pd
+from IPython.display import display, Markdown
+
+import matplotlib.pyplot as plt
+from neuralforecast import NeuralForecast
+from neuralforecast.models import LSTM, NHITS, RNN
+from neuralforecast.utils import AirPassengersDF
+```
+
+## 2. Loading AirPassengers Data
+
+The `core.NeuralForecast` class contains shared, `fit`, `predict` and other methods that take as inputs pandas DataFrames with columns `['unique_id', 'ds', 'y']`, where `unique_id` identifies individual time series from the dataset, `ds` is the date, and `y` is the target variable.
+
+In this example dataset consists of a set of a single series, but you can easily fit your model to larger datasets in long format.
+
+```cs
+Y_df = AirPassengersDF # Defined in neuralforecast.utils
+Y_df.head()
+```
+
+|     | unique_id | ds         | y     |
+| --- | --------- | ---------- | ----- |
+| 0   | 1.0       | 1949-01-31 | 112.0 |
+| 1   | 1.0       | 1949-02-28 | 118.0 |
+| 2   | 1.0       | 1949-03-31 | 132.0 |
+| 3   | 1.0       | 1949-04-30 | 129.0 |
+| 4   | 1.0       | 1949-05-31 | 121.0 |
+
+<Warning>
+    DataFrames must include all `['unique_id', 'ds', 'y']` columns. Make sure y column does not have missing or non-numeric values.
+</Warning>
+
