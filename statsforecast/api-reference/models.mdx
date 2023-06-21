@@ -2210,3 +2210,3304 @@ Exponential Smoothing fitted model.
 [source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
 
 
+#### Holt.predict
+
+```
+ Holt.predict (h:int, X:Optional[numpy.ndarray]=None,
+               level:Optional[List[int]]=None)
+```
+
+Predict with fitted Exponential Smoothing.
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenpus of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### Holt.predict_in_sample
+
+```
+ Holt.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted Exponential Smoothing insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### Holt.forward
+
+```
+ Holt.forward (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+               X_future:Optional[numpy.ndarray]=None,
+               level:Optional[List[int]]=None, fitted:bool=False)
+```
+Apply fitted Exponential Smoothing model to a new time series.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# Holt's usage example
+
+from statsforecast.models import Holt
+from statsforecast.utils import AirPassengers as ap
+
+
+model = Holt(season_length=12, error_type='A')
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### Holt-Winters’ method
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2418)
+
+#### HoltWinters
+
+```
+ HoltWinters (season_length:int=1, error_type:str='A',
+              alias:str='HoltWinters')
+```
+
+Holt-Winters’ method.
+
+Also known as triple exponential smoothing, Holt-Winters’ method is an extension of exponential smoothing for series that contain both trend and seasonality. This implementation returns the corresponding [`ETS`](#ETS) model with additive (A) or multiplicative (M) errors (so either ‘AAA’ or ‘MAM’).
+
+**References:**
+
+[Rob J. Hyndman and George Athanasopoulos (2018). “Forecasting principles and practice, Methods with seasonality”.](https://otexts.com/fpp3/holt-winters.html)
+
+<ResponseField name="season_length" type="int" default="1">
+season length
+</ResponseField>
+
+<ResponseField name="error_type" type="str" default="A">
+error type
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="HoltWinters">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### HoltWinters.forecast
+
+```
+ HoltWinters.forecast (y:numpy.ndarray, h:int,
+                       X:Optional[numpy.ndarray]=None,
+                       X_future:Optional[numpy.ndarray]=None,
+                       level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Memory Efficient Exponential Smoothing predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### HoltWinters.fit
+
+```
+ HoltWinters.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+Fit the Exponential Smoothing model.
+
+Fit an Exponential Smoothing model to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField>
+
+
+<ResponseField name="Returns">
+Exponential Smoothing fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### HoltWinters.predict
+
+```
+ HoltWinters.predict (h:int, X:Optional[numpy.ndarray]=None,
+                      level:Optional[List[int]]=None)
+```
+
+Predict with fitted Exponential Smoothing.
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### HoltWinters.predict_in_sample
+
+```
+ HoltWinters.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted Exponential Smoothing insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### HoltWinters.forward
+
+```
+ HoltWinters.forward (y:numpy.ndarray, h:int,
+                      X:Optional[numpy.ndarray]=None,
+                      X_future:Optional[numpy.ndarray]=None,
+                      level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Apply fitted Exponential Smoothing model to a new time series.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python# Holt-Winters' usage example
+
+from statsforecast.models import HoltWinters
+from statsforecast.utils import AirPassengers as ap
+
+
+model = HoltWinters(season_length=12, error_type='A')
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+
+
+## Baseline Models
+
+### HistoricAverage
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2469)
+
+#### HistoricAverage
+
+```
+ HistoricAverage (alias:str='HistoricAverage')
+```
+
+HistoricAverage model.
+
+Also known as mean method. Uses a simple average of all past observations. Assuming there are 
+ observations, the one-step forecast is given by:
+
+ ![](CleanShot2023-06-13at11.23.11.png)
+
+ **References:**
+
+ [Rob J. Hyndman and George Athanasopoulos (2018). “Forecasting principles and practice, Simple Methods”.](https://otexts.com/fpp3/simple-methods.html)
+
+ [source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2573)
+
+ #### HistoricAverage.forecast
+
+```
+ HistoricAverage.forecast (y:numpy.ndarray, h:int,
+                           X:Optional[numpy.ndarray]=None,
+                           X_future:Optional[numpy.ndarray]=None,
+                           level:Optional[Tuple[int]]=None,
+                           fitted:bool=False)
+```
+
+Memory Efficient HistoricAverage predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n, ).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2490)
+
+
+#### HistoricAverage.fit
+
+```
+ HistoricAverage.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the HistoricAverage model.
+
+Fit an HistoricAverage to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenpus of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns" type="self">
+HistoricAverage fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2519)
+
+
+#### HistoricAverage.predict
+
+```
+ HistoricAverage.predict (h:int, X:Optional[numpy.ndarray]=None,
+                          level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted HistoricAverage.
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2553)
+
+
+#### HistoricAverage.predict_in_sample
+
+```
+ HistoricAverage.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted HistoricAverage insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# HistoricAverage's usage example
+
+from statsforecast.models import HistoricAverage
+from statsforecast.utils import AirPassengers as ap
+
+
+model = HistoricAverage()
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### Naive
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2626)
+
+#### Naive
+
+```
+ Naive (alias:str='Naive')
+```
+
+**References:**
+
+[Rob J. Hyndman and George Athanasopoulos (2018). “forecasting principles and practice, Simple Methods”.](https://otexts.com/fpp3/simple-methods.html)
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2726)
+
+#### Naive.forecast
+
+```
+ Naive.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                 X_future:Optional[numpy.ndarray]=None,
+                 level:Optional[Tuple[int]]=None, fitted:bool=False)
+```
+
+Memory Efficient Naive predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int"></ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2645)
+
+#### Naive.fit
+
+```
+ Naive.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the Naive model.
+
+Fit an Naive to a time series (numpy.array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns" type="self:">
+Naive fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2674)
+
+
+#### Naive.predict
+
+```
+ Naive.predict (h:int, X:Optional[numpy.ndarray]=None,
+                level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted Naive.
+
+<ResponseField name="h" type="int">
+forecasting horizon
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+exogenous regressors
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+confidence level
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2708)
+
+
+#### Naive.predict_in_sample
+
+```
+ Naive.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted Naive insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# Naive's usage example
+
+from statsforecast.models import Naive
+from statsforecast.utils import AirPassengers as ap
+
+
+model = Naive()
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### RandomWalkWithDrift
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2800)
+
+#### RandomWalkWithDrift
+
+```
+ RandomWalkWithDrift (alias:str='RWD')
+```
+
+**References:**
+
+[Rob J. Hyndman and George Athanasopoulos (2018). “forecasting principles and practice, Simple Methods”.](https://otexts.com/fpp3/simple-methods.html)
+
+<ResponseField name="alias" type="str" default="RWD">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2903)
+
+
+#### RandomWalkWithDrift.forecast
+
+```
+ RandomWalkWithDrift.forecast (y:numpy.ndarray, h:int,
+                               X:Optional[numpy.ndarray]=None,
+                               X_future:Optional[numpy.ndarray]=None,
+                               level:Optional[Tuple[int]]=None,
+                               fitted:bool=False)
+```
+
+Memory Efficient RandomWalkWithDrift predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast horizon.
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="forecasts: dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2825)
+
+
+#### RandomWalkWithDrift.fit
+
+```
+ RandomWalkWithDrift.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the RandomWalkWithDrift model.
+
+Fit an RandomWalkWithDrift to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+</ResponseField>
+
+<ResponseField name="Returns" >
+RandomWalkWithDrift fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2853)
+
+#### RandomWalkWithDrift.predict
+
+```
+ RandomWalkWithDrift.predict (h:int, X:Optional[numpy.ndarray]=None,
+                              level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted RandomWalkWithDrift.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2885)
+
+#### RandomWalkWithDrift.predict_in_sample
+
+```
+ RandomWalkWithDrift.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted RandomWalkWithDrift insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+```python 
+# RandomWalkWithDrift's usage example
+
+from statsforecast.models import RandomWalkWithDrift
+from statsforecast.utils import AirPassengers as ap
+
+
+model = RandomWalkWithDrift()
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### SeasonalNaive
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2957)
+
+#### SeasonalNaive
+
+```
+ SeasonalNaive (season_length:int, alias:str='SeasonalNaive')
+```
+
+Initialize self. See help(type(self)) for accurate signature.
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3066)
+
+#### SeasonalNaive.forecast
+
+```
+ SeasonalNaive.forecast (y:numpy.ndarray, h:int,
+                         X:Optional[numpy.ndarray]=None,
+                         X_future:Optional[numpy.ndarray]=None,
+                         level:Optional[Tuple[int]]=None,
+                         fitted:bool=False)
+```
+
+Memory Efficient SeasonalNaive predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L2979)
+
+#### SeasonalNaive.fit
+
+```
+ SeasonalNaive.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the SeasonalNaive model.
+
+Fit an SeasonalNaive to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns">
+SeasonalNaive fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3012)
+
+#### SeasonalNaive.predict
+
+```
+SeasonalNaive.predict (h:int, X:Optional[numpy.ndarray]=None,
+                        level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted Naive.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None"></ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3048)
+
+
+#### SeasonalNaive.predict_in_sample
+
+```
+ SeasonalNaive.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted SeasonalNaive insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# SeasonalNaive's usage example
+
+from statsforecast.models import SeasonalNaive
+from statsforecast.utils import AirPassengers as ap
+
+
+model = SeasonalNaive(season_length=12)
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### WindowAverage
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3141)
+
+#### WindowAverage
+
+```
+ WindowAverage (window_size:int, alias:str='WindowAverage')
+```
+
+WindowAverage model.
+
+Uses the average of the last _k_ observations, with _k_ the length of the window. Wider windows will capture global trends, while narrow windows will reveal local trends. The length of the window selected should take into account the importance of past observations and how fast the series changes.
+
+**References:**
+
+[Rob J. Hyndman and George Athanasopoulos (2018). “forecasting principles and practice, Simple Methods”.](https://otexts.com/fpp3/simple-methods.html)
+
+<ResponseField name="window_size" type="int">
+Size of truncated series on which average is estimated.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="WindowAverage">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3228)
+
+#### WindowAverage.forecast
+
+```
+ WindowAverage.forecast (y:numpy.ndarray, h:int,
+                         X:Optional[numpy.ndarray]=None,
+                         X_future:Optional[numpy.ndarray]=None,
+                         fitted:bool=False)
+```
+
+Memory Efficient WindowAverage predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3166)
+
+#### WindowAverage.fit
+
+```
+ WindowAverage.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the WindowAverage model.
+
+Fit an WindowAverage to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns">
+WindowAverage fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3192)
+
+
+#### WindowAverage.predict
+
+```
+ WindowAverage.predict (h:int, X:Optional[numpy.ndarray]=None)
+```
+
+Predict with fitted WindowAverage.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3213)
+
+
+#### WindowAverage.predict_in_sample
+
+```
+ WindowAverage.predict_in_sample ()
+```
+
+Access fitted WindowAverage insample predictions.
+
+```python 
+# WindowAverage's usage example
+
+from statsforecast.models import WindowAverage
+from statsforecast.utils import AirPassengers as ap
+
+
+model = WindowAverage(window_size=12*4)
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### SeasonalWindowAverage
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3287)
+
+#### SeasonalWindowAverage
+
+```
+ SeasonalWindowAverage (season_length:int, window_size:int,
+                        alias:str='SeasWA')
+```
+
+SeasonalWindowAverage model.
+
+An average of the last _k_ observations of the same period, with _k_the length of the window.
+
+**References:**
+
+[Rob J. Hyndman and George Athanasopoulos (2018). “forecasting principles and practice, Simple Methods”.](https://otexts.com/fpp3/simple-methods.html)
+
+<ResponseField name="season_length" type="int"></ResponseField>
+
+<ResponseField name="window_size" type="int">
+Size of truncated series on which average is estimated.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="SeasWA">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3382)
+
+#### SeasonalWindowAverage.forecast
+
+```
+ SeasonalWindowAverage.forecast (y:numpy.ndarray, h:int,
+                                 X:Optional[numpy.ndarray]=None,
+                                 X_future:Optional[numpy.ndarray]=None,
+                                 fitted:bool=False)
+```
+
+Memory Efficient SeasonalWindowAverage predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3312)
+
+
+#### SeasonalWindowAverage.fit
+
+```
+ SeasonalWindowAverage.fit (y:numpy.ndarray,
+                            X:Optional[numpy.ndarray]=None)
+```
+
+Fit the SeasonalWindowAverage model.
+
+Fit an SeasonalWindowAverage to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenpus of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns">
+SeasonalWindowAverage fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3344)
+
+
+#### SeasonalWindowAverage.predict
+
+```
+ SeasonalWindowAverage.predict (h:int, X:Optional[numpy.ndarray]=None)
+```
+
+Predict with fitted SeasonalWindowAverage.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3367)
+
+#### SeasonalWindowAverage.predict_in_sample
+
+```
+ SeasonalWindowAverage.predict_in_sample ()
+```
+
+Access fitted SeasonalWindowAverage insample predictions.
+
+```python 
+# SeasonalWindowAverage's usage example
+
+from statsforecast.models import SeasonalWindowAverage
+from statsforecast.utils import AirPassengers as ap
+
+
+model = SeasonalWindowAverage(season_length=12, window_size=4)
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+## Sparse or Intermittent
+
+### ADIDA
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3448)
+
+#### ADIDA
+
+```
+ ADIDA (alias:str='ADIDA')
+```
+
+ADIDA model.
+
+Aggregate-Dissagregate Intermittent Demand Approach: Uses temporal aggregation to reduce the number of zero observations. Once the data has been agregated, it uses the optimized SES to generate the forecasts at the new level. It then breaks down the forecast to the original level using equal weights.
+
+ADIDA specializes on sparse or intermittent series are series with very few non-zero observations. They are notoriously hard to forecast, and so, different methods have been developed especifically for them.
+
+**References:**
+
+[Nikolopoulos, K., Syntetos, A. A., Boylan, J. E., Petropoulos, F., & Assimakopoulos, V. (2011). An aggregate–disaggregate intermittent demand approach (ADIDA) to forecasting: an empirical proposition and analysis. Journal of the Operational Research Society, 62(3), 544-554..](https://researchportal.bath.ac.uk/en/publications/an-aggregate-disaggregate-intermittent-demand-approach-adida-to-f)
+
+<ResponseField name="alias" type="str" default="ADIDA">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3533)
+
+
+#### ADIDA.forecast
+
+```
+ ADIDA.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                 X_future:Optional[numpy.ndarray]=None, fitted:bool=False)
+```
+
+Memory Efficient ADIDA predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3474)
+
+
+#### ADIDA.fit
+
+```
+ ADIDA.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the ADIDA model.
+
+Fit an ADIDA to a time series (numpy array) `y`.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+</ResponseField>
+
+<ResponseField name="Returns" >
+ADIDA fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3497)
+
+#### ADIDA.predict
+
+```
+ ADIDA.predict (h:int, X:Optional[numpy.ndarray]=None)
+```
+
+Predict with fitted ADIDA.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3518)
+
+#### ADIDA.predict_in_sample
+
+```
+ ADIDA.predict_in_sample ()
+```
+
+Access fitted ADIDA insample predictions.
+
+```python 
+# ADIDA's usage example
+
+from statsforecast.models import ADIDA
+from statsforecast.utils import AirPassengers as ap
+
+
+model = ADIDA()
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### CrostonClassic
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3591)
+
+#### CrostonClassic
+
+```
+ CrostonClassic (alias:str='CrostonClassic')
+```
+
+**References:**
+
+Croston, J. D. (1972). Forecasting and stock control for intermittent demands. Journal of the Operational Research Society, 23(3), 289-303.
+
+<ResponseField name="alias" type="str" default="CrostonClassic">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3675)
+
+#### CrostonClassic.forecast
+
+```
+ CrostonClassic.forecast (y:numpy.ndarray, h:int,
+                          X:Optional[numpy.ndarray]=None,
+                          X_future:Optional[numpy.ndarray]=None,
+                          fitted:bool=False)
+```
+
+Memory Efficient CrostonClassic predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3616)
+
+
+#### CrostonClassic.fit
+
+```
+ CrostonClassic.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the CrostonClassic model.
+
+Fit an CrostonClassic to a time series (numpy array) `y`.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+</ResponseField>
+
+<ResponseField name="Returns">
+CrostonClassic fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3639)
+
+
+#### CrostonClassic.predict
+
+```
+ CrostonClassic.predict (h:int, X:Optional[numpy.ndarray]=None)
+```
+
+Predict with fitted CrostonClassic.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3660)
+
+#### CrostonClassic.predict_in_sample
+
+```
+ CrostonClassic.predict_in_sample (level)
+```
+
+Access fitted CrostonClassic insample predictions.
+
+<ResponseField name="level"></ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# CrostonClassic's usage example
+
+from statsforecast.models import CrostonClassic
+from statsforecast.utils import AirPassengers as ap
+
+
+model = CrostonClassic()
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### CrostonOptimized
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3732)
+
+#### CrostonOptimized
+
+```
+ CrostonOptimized (alias:str='CrostonOptimized')
+```
+
+**References:**
+
+[Croston, J. D. (1972). Forecasting and stock control for intermittent demands. Journal of the Operational Research Society, 23(3), 289-303..](https://link.springer.com/article/10.1057/jors.1972.50)
+
+<ResponseField name="alias" type="str" default="CrostonOptimized">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3817)
+
+#### CrostonOptimized.forecast
+
+```
+ CrostonOptimized.forecast (y:numpy.ndarray, h:int,
+                            X:Optional[numpy.ndarray]=None,
+                            X_future:Optional[numpy.ndarray]=None,
+                            fitted:bool=False)
+```
+
+Memory Efficient CrostonOptimized predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3758)
+
+
+#### CrostonOptimized.fit
+```
+ CrostonOptimized.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the CrostonOptimized model.
+
+Fit an CrostonOptimized to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns" >
+CrostonOptimized fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3781)
+
+#### CrostonOptimized.predict
+
+```
+ CrostonOptimized.predict (h:int, X:Optional[numpy.ndarray]=None)
+```
+
+Predict with fitted CrostonOptimized.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3802)
+
+
+#### CrostonOptimized.predict_in_sample
+
+```
+ CrostonOptimized.predict_in_sample ()
+```
+
+Access fitted CrostonOptimized insample predictions.
+
+```python 
+# CrostonOptimized's usage example
+
+from statsforecast.models import CrostonOptimized
+from statsforecast.utils import AirPassengers as ap
+
+
+model = CrostonOptimized()
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### CrostonSBA
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3866)
+
+#### CrostonSBA
+
+```
+ CrostonSBA (alias:str='CrostonSBA')
+```
+
+**References:**
+
+[Croston, J. D. (1972). Forecasting and stock control for intermittent demands. Journal of the Operational Research Society, 23(3), 289-303..](https://link.springer.com/article/10.1057/jors.1972.50)
+
+<ResponseField name="alias" type="str" default="CrostonSBA">
+Custom name of the model.
+</ResponseField>
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3951)
+
+#### CrostonSBA.forecast
+
+```
+ CrostonSBA.forecast (y:numpy.ndarray, h:int,
+                      X:Optional[numpy.ndarray]=None,
+                      X_future:Optional[numpy.ndarray]=None,
+                      fitted:bool=False)
+```
+
+Memory Efficient CrostonSBA predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3892)
+
+#### CrostonSBA.fit
+
+```
+ CrostonSBA.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the CrostonSBA model.
+
+Fit an CrostonSBA to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns">
+CrostonSBA fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3915)
+
+#### CrostonSBA.predict
+
+```
+ CrostonSBA.predict (h:int, X:Optional[numpy.ndarray]=None)
+```
+
+Predict with fitted CrostonSBA.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L3936)
+
+#### CrostonSBA.predict_in_sample
+
+```
+ CrostonSBA.predict_in_sample ()
+```
+
+Access fitted CrostonSBA insample predictions.
+
+```python 
+# CrostonSBA's usage example
+
+from statsforecast.models import CrostonSBA
+from statsforecast.utils import AirPassengers as ap
+
+
+model = CrostonSBA()
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### IMAPA
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4011)
+
+#### IMAPA
+
+```
+ IMAPA (alias:str='IMAPA')
+```
+
+MAPA model.
+
+Intermittent Multiple Aggregation Prediction Algorithm: Similar to ADIDA, but instead of using a single aggregation level, it considers multiple in order to capture different dynamics of the data. Uses the optimized SES to generate the forecasts at the new levels and then combines them using a simple average.
+
+**References:**
+
+[Syntetos, A. A., & Boylan, J. E. (2021). Intermittent demand forecasting: Context, methods and applications. John Wiley & Sons..](https://www.ifors.org/intermittent-demand-forecasting-context-methods-and-applications/)
+
+<ResponseField name="alias" type="str" default="IMAPA">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4092)
+
+
+#### IMAPA.forecast
+
+```
+ IMAPA.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                 X_future:Optional[numpy.ndarray]=None, fitted:bool=False)
+```
+
+Memory Efficient IMAPA predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4033)
+
+#### IMAPA.fit
+
+```
+ IMAPA.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the IMAPA model.
+
+Fit an IMAPA to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+</ResponseField>
+
+<ResponseField name="Returns" >
+IMAPA fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4056)
+
+
+#### IMAPA.predict
+
+```
+ IMAPA.predict (h:int, X:Optional[numpy.ndarray]=None)
+```
+
+Predict with fitted IMAPA.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns" type="dict">
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4077)
+
+#### IMAPA.predict_in_sample
+
+```
+ IMAPA.predict_in_sample ()
+```
+
+Access fitted IMAPA insample predictions.
+
+```python 
+# IMAPA's usage example
+
+from statsforecast.models import IMAPA
+from statsforecast.utils import AirPassengers as ap
+
+
+model = IMAPA()
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### TSB
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4149)
+
+#### TSB
+
+```
+ TSB (alpha_d:float, alpha_p:float, alias:str='TSB')
+```
+
+**References:**
+
+[Teunter, R. H., Syntetos, A. A., & Babai, M. Z. (2011). Intermittent demand: Linking forecasting to inventory obsolescence. European Journal of Operational Research, 214(3), 606-615.](https://www.sciencedirect.com/science/article/abs/pii/S0377221711004437)
+
+<ResponseField name="alpha_d" type="float">
+Smoothing parameter for demand.
+</ResponseField>
+
+<ResponseField name="alpha_p" type="float">
+Smoothing parameter for probability.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="TSB">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4248)
+
+
+#### TSB.forecast
+
+
+```
+ TSB.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+               X_future:Optional[numpy.ndarray]=None, fitted:bool=False)
+```
+
+Memory Efficient TSB predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4189)
+
+#### TSB.fit
+
+```
+ TSB.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the TSB model.
+
+Fit an TSB to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns">
+TSB fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4212)
+
+#### TSB.predict
+
+```
+ TSB.predict (h:int, X:Optional[numpy.ndarray]=None)
+```
+
+Predict with fitted TSB.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4233)
+
+
+#### TSB.predict_in_sample
+
+```
+ TSB.predict_in_sample ()
+```
+
+Access fitted TSB insample predictions.
+
+```python 
+# TSB's usage example
+
+from statsforecast.models import TSB
+from statsforecast.utils import AirPassengers as ap
+
+
+model = TSB(alpha_d=0.5, alpha_p=0.5)
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+## Multiple Seasonalities
+
+### MSTL
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4301)
+
+#### MSTL
+
+```
+ MSTL (season_length:Union[int,List[int]], trend_forecaster=AutoETS,
+       stl_kwargs:Optional[Dict]=None, alias:str='MSTL')
+```
+
+MSTL model.
+
+The MSTL (Multiple Seasonal-Trend decomposition using LOESS) decomposes the time series in multiple seasonalities using LOESS. Then forecasts the trend using a custom non-seaonal model and each seasonality using a SeasonalNaive model.
+
+**References:**
+
+[Bandara, Kasun & Hyndman, Rob & Bergmeir, Christoph. (2021). “MSTL: A Seasonal-Trend Decomposition Algorithm for Time Series with Multiple Seasonal Patterns”..](https://arxiv.org/abs/2107.13462)
+
+
+<ResponseField name="season_length" type="typing.Union[int, typing.List[int]]">
+Number of observations per unit of time. For multiple seasonalities use a list.
+</ResponseField>
+
+<ResponseField name="trend_forecaster" type="AutoETS" default="AutoETS">
+StatsForecast model used to forecast the trend component.
+</ResponseField>
+
+<ResponseField name="stl_kwargs" type="typing.Optional[typing.Dict]" default="None">
+Extra arguments to pass to [`statsmodels.tsa.seasonal.STL.`](https://www.statsmodels.org/dev/generated/statsmodels.tsa.seasonal.STL.html#statsmodels.tsa.seasonal.STL)
+
+The `period` and `seasonal` arguments are reserved.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="MSTL">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4353)
+
+#### MSTL.fit
+
+```
+ MSTL.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the MSTL model.
+
+Fit MSTL to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns">
+TSB fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4212)
+
+#### MSTL.predict
+
+```
+ MSTL.predict (h:int, X:Optional[numpy.ndarray]=None,
+               level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted MSTL.
+
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4413)
+
+
+
+#### MSTL.predict_in_sample
+```
+ MSTL.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted MSTL insample predictions.
+
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4435)
+
+#### MSTL.forecast
+
+```
+ MSTL.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                X_future:Optional[numpy.ndarray]=None,
+                level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+
+Memory Efficient MSTL predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4489)
+
+
+#### MSTL.forward
+
+```
+ MSTL.forward (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+               X_future:Optional[numpy.ndarray]=None,
+               level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Apply fitted MSTL model to a new time series.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# MSTL's usage example
+
+from statsforecast.models import MSTL
+from statsforecast.utils import AirPassengers as ap
+
+
+mstl_model = MSTL(season_length=[3, 12], trend_forecaster=AutoARIMA())
+mstl_model = mstl_model.fit(y=ap)
+y_hat_dict = mstl_model.predict(h=4, level=[80])
+y_hat_dict
+```
+
+
+
+## Theta Family
+
+### Standard Theta Method
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4542)
+
+
+#### Theta
+```
+ Theta (season_length:int=1, decomposition_type:str='multiplicative',
+        alias:str='Theta', prediction_intervals:Optional[statsforecast.uti
+        ls.ConformalIntervals]=None)
+```
+
+Standard Theta Method.
+
+**References:**
+
+[Jose A. Fiorucci, Tiago R. Pellegrini, Francisco Louzada, Fotios Petropoulos, Anne B. Koehler (2016). “Models for optimising the theta method and their relationship to state space models”. International Journal of Forecasting](https://www.sciencedirect.com/science/article/pii/S0169207016300243)
+
+<ResponseField name="season_length" type="int" default="1">
+Number of observations per unit of time. Ex: 24 Hourly data.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="Theta">
+Custom name of the model.
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+Information to compute conformal prediction intervals.
+
+By default, the model will compute the native prediction
+intervals.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### Theta.forecast
+
+```
+ Theta.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                 X_future:Optional[numpy.ndarray]=None,
+                 level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Memory Efficient AutoTheta predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### Theta.fit
+```
+ Theta.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the AutoTheta model.
+
+Fit an AutoTheta model to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns" >
+AutoTheta fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### Theta.predict
+
+```
+ Theta.predict (h:int, X:Optional[numpy.ndarray]=None,
+                level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted AutoTheta.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+
+#### Theta.predict_in_sample
+
+
+```
+ Theta.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted AutoTheta insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### Theta.forward
+
+```
+ Theta.forward (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                X_future:Optional[numpy.ndarray]=None,
+                level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Apply fitted AutoTheta to a new time series.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# Theta's usage example
+
+from statsforecast.models import Theta
+from statsforecast.utils import AirPassengers as ap
+
+
+model = Theta(season_length=12)
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+### Optimized Theta Method
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4578)
+
+
+#### OptimizedTheta
+
+```
+ OptimizedTheta (season_length:int=1,
+                 decomposition_type:str='multiplicative',
+                 alias:str='OptimizedTheta', prediction_intervals:Optional
+                 [statsforecast.utils.ConformalIntervals]=None)
+```
+
+Optimized Theta Method.
+
+**References:**
+
+[Jose A. Fiorucci, Tiago R. Pellegrini, Francisco Louzada, Fotios Petropoulos, Anne B. Koehler (2016). “Models for optimising the theta method and their relationship to state space models”. International Journal of Forecasting](https://www.sciencedirect.com/science/article/pii/S0169207016300243)
+
+<ResponseField name="season_length" type="int" default="1">
+Number of observations per unit of time. Ex: 24 Hourly data.
+</ResponseField>
+
+<ResponseField name="decomposition_type" type="str" default="multiplicative">
+Sesonal decomposition type, ‘multiplicative’ (default) or ‘additive’.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="OptimizedTheta">
+Custom name of the model. Default OptimizedTheta.
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+Information to compute conformal prediction intervals.
+
+By default, the model will compute the native prediction intervals.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### OptimizedTheta.forecast
+
+```
+ OptimizedTheta.forecast (y:numpy.ndarray, h:int,
+                          X:Optional[numpy.ndarray]=None,
+                          X_future:Optional[numpy.ndarray]=None,
+                          level:Optional[List[int]]=None,
+                          fitted:bool=False)
+```
+
+Memory Efficient AutoTheta predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]	" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### OptimizedTheta.fit
+
+```
+ OptimizedTheta.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the AutoTheta model.
+
+Fit an AutoTheta model to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns">
+AutoTheta fitted model.
+</ResponseField>
+
+
+[soure](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### OptimizedTheta.predict
+
+```
+ OptimizedTheta.predict (h:int, X:Optional[numpy.ndarray]=None,
+                         level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted AutoTheta.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### OptimizedTheta.predict_in_sample
+
+```
+ OptimizedTheta.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted AutoTheta insample predictions.
+
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### OptimizedTheta.forward
+
+```
+ OptimizedTheta.forward (y:numpy.ndarray, h:int,
+                         X:Optional[numpy.ndarray]=None,
+                         X_future:Optional[numpy.ndarray]=None,
+                         level:Optional[List[int]]=None,
+                         fitted:bool=False)
+```
+
+Apply fitted AutoTheta to a new time series.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# OptimzedThetA's usage example
+
+from statsforecast.models import OptimizedTheta
+from statsforecast.utils import AirPassengers as ap
+
+
+model = OptimizedTheta(season_length=12)
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+
+### Dynamic Standard Theta Method
+
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4614)
+
+#### DynamicTheta
+
+```
+ DynamicTheta (season_length:int=1,
+               decomposition_type:str='multiplicative',
+               alias:str='DynamicTheta', prediction_intervals:Optional[sta
+               tsforecast.utils.ConformalIntervals]=None)
+```
+
+Dynamic Standard Theta Method.
+
+**References:**
+
+[Jose A. Fiorucci, Tiago R. Pellegrini, Francisco Louzada, Fotios Petropoulos, Anne B. Koehler (2016). “Models for optimising the theta method and their relationship to state space models”. International Journal of Forecasting](https://www.sciencedirect.com/science/article/pii/S0169207016300243)
+
+<ResponseField name="season_length" type="int" default="1">
+Number of observations per unit of time. Ex: 24 Hourly data.
+</ResponseField>
+
+<ResponseField name="decomposition_type" type="str" default="multiplicative">
+Sesonal decomposition type, ‘multiplicative’ (default) or ‘additive’.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="DynamicTheta">
+Custom name of the model. Default OptimizedTheta.
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+Information to compute conformal prediction intervals.
+
+By default, the model will compute the native prediction intervals.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### DynamicTheta.forecast
+
+```
+ DynamicTheta.forecast (y:numpy.ndarray, h:int,
+                        X:Optional[numpy.ndarray]=None,
+                        X_future:Optional[numpy.ndarray]=None,
+                        level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Memory Efficient AutoTheta predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### DynamicTheta.fit
+
+```
+ DynamicTheta.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit the AutoTheta model.
+
+Fit an AutoTheta model to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns" >
+AutoTheta fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### DynamicTheta.predict
+
+```
+ DynamicTheta.predict (h:int, X:Optional[numpy.ndarray]=None,
+                       level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted AutoTheta.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+
+#### DynamicTheta.predict_in_sample
+
+```
+ DynamicTheta.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted AutoTheta insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### DynamicTheta.forward
+
+```
+ DynamicTheta.forward (y:numpy.ndarray, h:int,
+                       X:Optional[numpy.ndarray]=None,
+                       X_future:Optional[numpy.ndarray]=None,
+                       level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Apply fitted AutoTheta to a new time series.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# DynStandardThetaMethod's usage example
+
+from statsforecast.models import DynamicTheta
+from statsforecast.utils import AirPassengers as ap
+
+
+model = DynamicTheta(season_length=12)
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+
+### Dynamic Optimized Theta Method
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4650)
+
+#### DynamicOptimizedTheta
+
+```
+ DynamicOptimizedTheta (season_length:int=1,
+                        decomposition_type:str='multiplicative',
+                        alias:str='DynamicOptimizedTheta', prediction_inte
+                        rvals:Optional[statsforecast.utils.ConformalInterv
+                        als]=None)
+```
+
+Dynamic Optimized Theta Method.
+
+**References:**
+
+[Jose A. Fiorucci, Tiago R. Pellegrini, Francisco Louzada, Fotios Petropoulos, Anne B. Koehler (2016). “Models for optimising the theta method and their relationship to state space models”. International Journal of Forecasting](https://www.sciencedirect.com/science/article/pii/S0169207016300243)
+
+<ResponseField name="season_length" type="int" default="1">
+Number of observations per unit of time. Ex: 24 Hourly data.
+</ResponseField>
+
+<ResponseField name="decomposition_type" type="str" default="multiplicative">
+Sesonal decomposition type, ‘multiplicative’ (default) or ‘additive’.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="DynamicOptimizedTheta">
+Custom name of the model.
+</ResponseField>
+
+<ResponseField name="prediction_intervals" type="typing.Optional[statsforecast.utils.ConformalIntervals]" default="None">
+Information to compute conformal prediction intervals.
+
+By default, the model will compute the native prediction intervals.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### DynamicOptimizedTheta.forecast
+
+```
+DynamicOptimizedTheta.forecast (y:numpy.ndarray, h:int,
+                                 X:Optional[numpy.ndarray]=None,
+                                 X_future:Optional[numpy.ndarray]=None,
+                                 level:Optional[List[int]]=None,
+                                 fitted:bool=False)
+```
+
+Memory Efficient AutoTheta predictions.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### DynamicOptimizedTheta.fit
+
+```
+ DynamicOptimizedTheta.fit (y:numpy.ndarray,
+                            X:Optional[numpy.ndarray]=None)
+```
+
+Fit the AutoTheta model.
+
+Fit an AutoTheta model to a time series (numpy array) `y` and optionally exogenous variables (numpy array) `X`.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="Returns">
+AutoTheta fitted model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### DynamicOptimizedTheta.predict
+
+```
+ DynamicOptimizedTheta.predict (h:int, X:Optional[numpy.ndarray]=None,
+                                level:Optional[Tuple[int]]=None)
+```
+
+Predict with fitted AutoTheta.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+#### DynamicOptimizedTheta.predict_in_sample
+
+```
+ DynamicOptimizedTheta.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted AutoTheta insample predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#LNone)
+
+
+#### DynamicOptimizedTheta.forward
+
+```
+ DynamicOptimizedTheta.forward (y:numpy.ndarray, h:int,
+                                X:Optional[numpy.ndarray]=None,
+                                X_future:Optional[numpy.ndarray]=None,
+                                level:Optional[List[int]]=None,
+                                fitted:bool=False)
+```
+
+Apply fitted AutoTheta to a new time series.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+Optional insample exogenous of shape (t, n_x).
+</ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None">
+Optional exogenous of shape (h, n_x).
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+```python 
+# OptimzedThetaMethod's usage example
+
+from statsforecast.models import DynamicOptimizedTheta
+from statsforecast.utils import AirPassengers as ap
+
+
+model = DynamicOptimizedTheta(season_length=12)
+model = model.fit(y=ap)
+y_hat_dict = model.predict(h=4)
+y_hat_dict
+```
+
+## ARCH Family
+
+### Garch model
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4686)
+
+#### GARCH
+
+**References:**
+
+[Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation. Econometrica: Journal of the econometric society, 987-1007.](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)
+
+[Bollerslev, T. (1986). Generalized autoregressive conditional heteroskedasticity. Journal of econometrics, 31(3), 307-327.](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=7da8bfa5295375c1141d797e80065a599153c19d)
+
+[James D. Hamilton. Time Series Analysis Princeton University Press, Princeton, New Jersey, 1st Edition, 1994.](https://press.princeton.edu/books/hardcover/9780691042893/time-series-analysis)
+
+
+<ResponseField name="p" type="int" default="1">
+Number of lagged versions of the series.
+</ResponseField>
+
+<ResponseField name="q" type="int" default="1"></ResponseField>
+
+<ResponseField name="alias" type="str" default="GARCH">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4734)
+
+
+#### GARCH.fit
+
+```
+ GARCH.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit GARCH model.
+
+Fit GARCH model to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns" >
+GARCH model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4754)
+
+
+#### GARCH.predict
+
+```
+ GARCH.predict (h:int, X:Optional[numpy.ndarray]=None,
+                level:Optional[List[int]]=None)
+```
+
+Predict with fitted GARCH model.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4784)
+
+
+#### GARCH.predict_in_sample
+
+```
+ GARCH.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted GARCH model predictions.
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4804)
+
+
+#### GARCH.forecast
+
+```
+ GARCH.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                 X_future:Optional[numpy.ndarray]=None,
+                 level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Memory Efficient GARCH model.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+### ARCH model
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4856)
+
+#### ARCH
+
+```
+ ARCH (p:int=1, alias:str='ARCH')
+```
+
+**References:**
+
+[Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation. Econometrica: Journal of the econometric society, 987-1007.](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)
+
+[James D. Hamilton. Time Series Analysis Princeton University Press, Princeton, New Jersey, 1st Edition, 1994.](https://press.princeton.edu/books/hardcover/9780691042893/time-series-analysis)
+
+
+<ResponseField name="p" type="int" default="1">
+Number of lagged versions of the series.
+</ResponseField>
+
+<ResponseField name="alias" type="str" default="ARCH">
+Custom name of the model.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4734)
+
+
+#### ARCH.fit
+
+```
+ ARCH.fit (y:numpy.ndarray, X:Optional[numpy.ndarray]=None)
+```
+
+Fit GARCH model.
+
+Fit GARCH model to a time series (numpy array) `y`.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (t, ).
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="Returns">
+GARCH model.
+</ResponseField> 
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4754)
+
+
+#### ARCH.predict
+
+```
+ ARCH.predict (h:int, X:Optional[numpy.ndarray]=None,
+               level:Optional[List[int]]=None)
+```
+
+Predict with fitted GARCH model.
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None">
+</ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4784)
+
+#### ARCH.predict_in_sample
+
+```
+ ARCH.predict_in_sample (level:Optional[Tuple[int]]=None)
+```
+
+Access fitted GARCH model predictions.
+
+
+<ResponseField name="level" type="typing.Optional[typing.Tuple[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+[source](https://github.com/Nixtla/statsforecast/blob/main/statsforecast/models.py#L4804)
+
+#### ARCH.forecast
+
+```
+ ARCH.forecast (y:numpy.ndarray, h:int, X:Optional[numpy.ndarray]=None,
+                X_future:Optional[numpy.ndarray]=None,
+                level:Optional[List[int]]=None, fitted:bool=False)
+```
+
+Memory Efficient GARCH model.
+
+This method avoids memory burden due from object storage. It is analogous to `fit_predict` without storing information. It assumes you know the forecast horizon in advance.
+
+<ResponseField name="y" type="ndarray">
+Clean time series of shape (n,).
+</ResponseField>
+
+<ResponseField name="h" type="int">
+Forecast Horizon 
+</ResponseField>
+
+<ResponseField name="X" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="X_future" type="typing.Optional[numpy.ndarray]" default="None"></ResponseField>
+
+<ResponseField name="level" type="typing.Optional[typing.List[int]]" default="None">
+Confidence levels (0-100) for prediction intervals.
+</ResponseField>
+
+<ResponseField name="fitted" type="bool" default="False">
+Whether or not to return insample predictions.
+</ResponseField>
+
+<ResponseField name="Returns" type="dict" >
+Dictionary with entries `mean` for point predictions and `level_*` for probabilistic predictions.
+</ResponseField>
+
+
+## References
+
+
+**General**
+
+* [Hyndman, R.J., & Athanasopoulos, G. (2021). “Forecasting: principles and practice, 3rd edition”. OTexts: Melbourne, Australia. OTexts.com/fpp3 Accessed on July 2022.](https://otexts.com/fpp3/)
+
+* [Shmueli, G., & Lichtendahl Jr, K. C. (2016). “Practical time series forecasting with R: A hands-on guide”. Axelrod Schnall Publishers.](https://www.forecastingbook.com/)
+
+
+
+**Automatic Forecasting**
+* [Rob J. Hyndman, Yeasmin Khandakar (2008). “Automatic Time Series Forecasting: The forecast package for R”.](https://www.jstatsoft.org/article/view/v027i03)
+
+
+**Exponential Smoothing**
+* [Charles. C. Holt (1957). “Forecasting seasonals and trends by exponentially weighted moving averages”, ONR Research Memorandum, Carnegie Institute of Technology 52.](https://www.sciencedirect.com/science/article/abs/pii/S0169207003001134)
+
+* [Peter R. Winters (1960). “Forecasting sales by exponentially weighted moving averages”. Management Science.](https://pubsonline.informs.org/doi/abs/10.1287/mnsc.6.3.324)
+
+* [Hyndman, Rob, et al (2008). “Forecasting with exponential smoothing: the state space approach”.](https://robjhyndman.com/expsmooth/)
+
+* [Rob J. Hyndman and George Athanasopoulos (2018). “Forecasting principles and practice, Methods with trend”.](https://otexts.com/fpp3/holt.html)
+
+* [Rob J. Hyndman and George Athanasopoulos (2018). “Forecasting principles and practice, Methods with seasonality”.](https://otexts.com/fpp3/holt-winters.html)
+
+
+**Simple Methods**
+
+* [Rob J. Hyndman and George Athanasopoulos (2018). “Forecasting principles and practice, Simple Methods”.](https://otexts.com/fpp3/simple-methods.html)
+
+
+**Sparse Intermittent**
+
+* [Croston, J. D. (1972). “Forecasting and stock control for intermittent demands”. Journal of the Operational Research Society, 23(3), 289-303.](https://link.springer.com/article/10.1057/jors.1972.50)
+
+* [Nikolopoulos, K., Syntetos, A. A., Boylan, J. E., Petropoulos, F., & Assimakopoulos, V. (2011). “An aggregate–disaggregate intermittent demand approach (ADIDA) to forecasting: an empirical proposition and analysis”. Journal of the Operational Research Society, 62(3), 544-554.](https://researchportal.bath.ac.uk/en/publications/an-aggregate-disaggregate-intermittent-demand-approach-adida-to-f)
+
+* [Syntetos, A. A., & Boylan, J. E. (2005). “The accuracy of intermittent demand estimates”. International Journal of forecasting, 21(2), 303-314.](https://www.academia.edu/1527250/The_accuracy_of_intermittent_demand_estimates)
+
+* [Syntetos, A. A., & Boylan, J. E. (2021). “Intermittent demand forecasting: Context, methods and applications”. John Wiley & Sons.](https://www.ifors.org/intermittent-demand-forecasting-context-methods-and-applications/)
+
+* [Teunter, R. H., Syntetos, A. A., & Babai, M. Z. (2011). “Intermittent demand: Linking forecasting to inventory obsolescence”. European Journal of Operational Research, 214(3), 606-615.](https://www.sciencedirect.com/science/article/abs/pii/S0377221711004437)
+
+
+**Multiple Seasonalities**
+
+* [Bandara, Kasun & Hyndman, Rob & Bergmeir, Christoph. (2021). “MSTL: A Seasonal-Trend Decomposition Algorithm for Time Series with Multiple Seasonal Patterns”.](https://arxiv.org/abs/2107.13462)
+
+
+**Theta Family**
+
+* [Jose A. Fiorucci, Tiago R. Pellegrini, Francisco Louzada, Fotios Petropoulos, Anne B. Koehler (2016). “Models for optimising the theta method and their relationship to state space models”. International Journal of Forecasting.](https://www.sciencedirect.com/science/article/pii/S0169207016300243)
+
+
+**GARCH Model**
+* [Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation. Econometrica: Journal of the econometric society, 987-1007.](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)
+
+* [Bollerslev, T. (1986). Generalized autoregressive conditional heteroskedasticity. Journal of econometrics, 31(3), 307-327.](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=7da8bfa5295375c1141d797e80065a599153c19d)
+
+* [Hamilton, J. D. (1994). Time series analysis. Princeton university press.](https://press.princeton.edu/books/hardcover/9780691042893/time-series-analysis)
+
+Give us a ⭐ on [Github](https://github.com/nixtla/statsforecast)
+
